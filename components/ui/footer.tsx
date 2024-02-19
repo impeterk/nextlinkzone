@@ -1,5 +1,4 @@
-
-import Icon from "./icon"
+import { SiNextdotjs } from "react-icons/si";
 export default function Header() {
   return (
 
@@ -9,8 +8,7 @@ export default function Header() {
         <span className="max-sm:hidden">|</span>
 
         <p className="flex items-center gap-2">powered by
-          <Icon icon="logos:nextjs-icon" className="text-3xl" />
-
+          <SiNextdotjs className="text-xl" />
         </p>
       </div>
     </footer >

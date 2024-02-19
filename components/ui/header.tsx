@@ -1,21 +1,32 @@
 import { ThemeToggle } from "@/components/theme/theme-toggle";
-import { Button } from "./button";
-import { Link2Icon } from "@radix-ui/react-icons";
-import Link from "next/link";
+import { LogOut, Logo } from '@/components/buttons'
+import NavLinks from "./NavLinks";
+import CreateLink from "@/app/create/CreateLink";
+import LoginLink from "@/app/login/LoginLink";
 
 export default function Header() {
+  const user = true
   return (
 
     <header className="border-b w-full shadow py-4">
       <div className="flex justify-between container items-center">
-        <Link href="/">
+        <Logo />
 
-          <Button variant="link" className="text-3xl tracking-wider" >
-            <Link2Icon className="size-7 mr-2" />
-            My<span className="text-emerald-500 dark:text-emerald-400">Link</span>Zone
-          </Button>
-        </Link>
-        <ThemeToggle />
+        <div className="flex items-center gap-6">
+          <div className="flex items-center">
+            {!user && (
+              <><CreateLink />
+                <LoginLink />
+              </>)}
+            {user && (
+              <>
+                <NavLinks />
+                <LogOut />
+              </>
+            )}
+          </div>
+          <ThemeToggle />
+        </div>
       </div>
     </header>
   )
