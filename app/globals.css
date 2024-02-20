@@ -74,11 +74,4 @@
   body {
     @apply bg-gradient-to-tr from-slate-300 to-slate-100 dark:from-slate-950 dark:to-slate-900 text-foreground font-sans;
   }
-
-  .main__layout {
-    min-height: 100dvh;
-    display: grid;
-    grid-template-rows: auto 1fr auto;
-    row-gap: 2rem;
-  }
 }
