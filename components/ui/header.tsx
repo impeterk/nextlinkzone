@@ -5,7 +5,7 @@ import CreateLink from "@/app/(app)/create/CreateLink";
 import LoginLink from "@/app/(app)/login/LoginLink";
 
 export default function Header() {
-  const user = true
+  const user = false
   return (
 
     <header className="border-b w-full shadow py-4">
