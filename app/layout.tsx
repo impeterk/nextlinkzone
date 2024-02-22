@@ -3,6 +3,7 @@ import { GeistSans } from 'geist/font/sans'
 import { GeistMono } from 'geist/font/mono'
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme/theme-provider";
+import NextTopLoader from 'nextjs-toploader'
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -24,6 +25,7 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
+          <NextTopLoader height={5} color="#10b981"/>
             {children}
         </ThemeProvider>
       </body>
