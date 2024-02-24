@@ -1,5 +1,6 @@
 'use server'
 
+import { signIn } from '@/auth';
 import { redirect } from 'next/navigation';
 import { z } from 'zod';
 
@@ -9,6 +10,6 @@ export async function navigateToCreate(formData: FormData) {
 }
 
 export async function logInWithProvider(formData: FormData) {
-    const provider = formData.get('provider')
-    console.log(provider)
+        const provider = formData.get('provider')
+        await signIn(provider)
 }
