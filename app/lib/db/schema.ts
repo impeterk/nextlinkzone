@@ -1,5 +1,6 @@
 import { integer, sqliteTable, text, primaryKey } from "drizzle-orm/sqlite-core"
 import type { AdapterAccount } from "@auth/core/adapters"
+import { sql } from "drizzle-orm"
 
 export const users = sqliteTable("user", {
  id: text("id").notNull().primaryKey(),
@@ -52,3 +53,13 @@ export const verificationTokens = sqliteTable(
   compoundKey: primaryKey({ columns: [vt.identifier, vt.token] }),
 })
 )
+
+export const pages = sqliteTable('pages',
+{
+  id: text("id").notNull().primaryKey().$defaultFn(() => crypto.randomUUID().split('-')[0]),
+ name: text("name").unique().notNull(),
+ userId: text("userId")
+ .notNull()
+ .references(() => users.id, { onDelete: "cascade" }),
+ createdAt: text('created_at').notNull().default(sql`CURRENT_TIMESTAMP`)
+})

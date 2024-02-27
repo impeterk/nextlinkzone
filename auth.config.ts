@@ -1,9 +1,10 @@
 import type { NextAuthConfig } from 'next-auth';
-import { DrizzleAdapter } from "@auth/drizzle-adapter"
-import { db } from "@/app/lib/db"
+import { DrizzleAdapter } from '@auth/drizzle-adapter';
+import { db } from '@/app/lib/db';
 
 export const authConfig = {
-    adapter: DrizzleAdapter(db),
+  adapter: DrizzleAdapter(db),
+  trustHost: true,
   pages: {
     signIn: '/signin',
   },
@@ -15,10 +16,10 @@ export const authConfig = {
         if (isLoggedIn) return true;
         return false; // Redirect unauthenticated users to login page
       } else if (isLoggedIn) {
-        return Response.redirect(new URL('/dashboard', nextUrl));
+        return Response.redirect(new URL('/dashboard/pages', nextUrl));
       }
       return true;
     },
   },
-  providers: [], // Add providers with an empty array for now
+  providers: []
 } satisfies NextAuthConfig;

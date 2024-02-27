@@ -11,7 +11,7 @@ export default async  function Header() {
 
     <header className="border-b w-full shadow py-4">
       <div className="flex justify-between container items-center">
-        <Logo href={user ? '/dashboard' : '/' }/>
+        <Logo href={user ? '/dashboard/pages' : '/' }/>
         {user && <>
         <h3 className="text-xl text-popover-foreground">👋 Hello {user.name}</h3>
         </>}

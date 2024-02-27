@@ -1,17 +1,22 @@
-import { PlusIcon } from "@radix-ui/react-icons";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../ui/card";
+'use client'
+import { usePathname } from "next/navigation";
+import { Card,  CardHeader, CardTitle } from "../ui/card";
+import Link from "next/link";
+import clsx from "clsx";
 
-export default function PageCard() {
+export default function PageCard({name, id}: {name:string, id: string}) {
+    const pathname = usePathname()
     return (
-        <Card className="opacity-50 hover:cursor-pointer hover:opacity-100">
+        <Link href={`/dashboard/pages/${id}`} >
+        <Card className={clsx("opacity-50  hover:opacity-100 flex items-center justify-center min-h-32 ", 
+        {'opacity-100': pathname.split('/').at(-1) === id }
+    )}>
                 <CardHeader>
-                    <CardTitle className="text-center">
-                        Add new page
+                    <CardTitle className="text-center text-xl">
+                    {name}
                     </CardTitle>
                 </CardHeader>
-            <CardContent className="flex items-center justify-center">
-                    <PlusIcon className="size-12" />
-            </CardContent>
         </Card>
+        </Link>
     )
 }

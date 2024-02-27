@@ -14,7 +14,7 @@ export default function Home() {
             One link to help you share everything you create, curate and sell
             from all your social media profiles.
           </p>
-        <Link href='/create'>
+        <Link href='/signin'>
           <Button
             className='w-full bg-emerald-500 py-6 text-xl font-semibold dark:bg-emerald-400'
             size='lg'

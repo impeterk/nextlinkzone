@@ -1,3 +1,4 @@
+import { getUserPage } from '@/app/lib/data/pages';
 import { auth } from '@/auth';
 import { AvatarImage, Avatar, AvatarFallback } from '@/components/ui/avatar';
 import {
@@ -8,13 +9,15 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 
-export default function DashboardPage() {
+export default async function DashboardPage({params}: {params: {page: string}}) {
+  const pageData = await getUserPage(params.page)
+  if (!pageData) return null
   return (
     <article>
       <header>
         <Card className='flex h-fit min-h-60 flex-col justify-center shadow'>
           <CardContent className='mt-auto text-center text-3xl'>
-            Page Name
+            {pageData.name}
           </CardContent>
           <CardFooter className='mt-auto flex justify-center'>
             <div className='relative'>

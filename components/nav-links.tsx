@@ -5,7 +5,7 @@ import { LuUserCog, LuHome } from "react-icons/lu";
 import clsx from 'clsx';
 import { usePathname } from 'next/navigation';
 const links = [
-  { name: 'Dashboard', href: '/dashboard', icon: LuHome },
+  { name: 'Dashboard', href: '/dashboard/pages', icon: LuHome },
   {
     name: 'Profile',
     href: '/dashboard/profile',
@@ -24,7 +24,7 @@ export default function NavLinks() {
             <Button variant={'link'} className={clsx(
               'flex items-center gap-2',
               {
-                'underline text-emerald-500 dark:text-emerald-400': pathname === link.href
+                'underline text-emerald-500 dark:text-emerald-400': pathname.includes(link.href)
               }
             )}>
               <LinkIcon className='size-5' />

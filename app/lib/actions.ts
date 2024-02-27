@@ -10,6 +10,6 @@ export async function navigateToCreate(formData: FormData) {
 }
 
 export async function logInWithProvider(formData: FormData) {
-        const provider = formData.get('provider')
+        const provider = formData.get('provider') as string
         await signIn(provider)
 }
