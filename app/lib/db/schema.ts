@@ -1,6 +1,6 @@
 import { integer, sqliteTable, text, primaryKey } from "drizzle-orm/sqlite-core"
 import type { AdapterAccount } from "@auth/core/adapters"
-import { sql } from "drizzle-orm"
+import { relations, sql } from "drizzle-orm"
 
 export const users = sqliteTable("user", {
  id: text("id").notNull().primaryKey(),
@@ -56,10 +56,27 @@ export const verificationTokens = sqliteTable(
 
 export const pages = sqliteTable('pages',
 {
-  id: text("id").notNull().primaryKey().$defaultFn(() => crypto.randomUUID().split('-')[0]),
- name: text("name").unique().notNull(),
+  id: text("id").notNull().primaryKey(),
  userId: text("userId")
  .notNull()
- .references(() => users.id, { onDelete: "cascade" }),
+ .references(() => users.id, { onDelete: "cascade"}),
  createdAt: text('created_at').notNull().default(sql`CURRENT_TIMESTAMP`)
 })
+
+export const links = sqliteTable('links', {
+  id: integer("id").notNull().primaryKey({autoIncrement: true}),
+  href: text('href').notNull(),
+  name: text('name').notNull(),
+  pageId: text("pageId").references(() => pages.id, {onDelete: 'cascade', onUpdate: 'cascade'}),
+  icon: text('icon')
+})
+
+export const pagesRelations = relations(pages, ({many}) => ({
+  links: many(links)
+}))
+export const linksRelations = relations(links, ({one}) => ({
+  page: one(pages, {
+    fields: [links.pageId],
+    references: [pages.id]
+  })
+}))

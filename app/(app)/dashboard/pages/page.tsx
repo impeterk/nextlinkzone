@@ -1,4 +1,4 @@
-import { getUserPages } from "@/app/lib/data/pages"
+import { getUserPages } from "@/app/lib/db"
 import { auth } from "@/auth"
 import { redirect } from "next/navigation"
 

@@ -10,8 +10,8 @@ export async function getUserPages(userId: string) {
     })
 }
 
-export async function getUserPage(pageId: string) {
+export async function getUserPage(pagename: string) {
     return await db.query.pages.findFirst({
-        where: eq(pages.id, pageId)
+        where: eq(pages.id, pagename)
     })
 }

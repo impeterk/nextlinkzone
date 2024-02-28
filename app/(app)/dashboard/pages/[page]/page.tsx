@@ -1,23 +1,22 @@
-import { getUserPage } from '@/app/lib/data/pages';
+import { getUserPage } from '@/app/lib/db';
 import { auth } from '@/auth';
 import { AvatarImage, Avatar, AvatarFallback } from '@/components/ui/avatar';
 import {
   Card,
   CardContent,
   CardFooter,
-  CardHeader,
-  CardTitle,
 } from '@/components/ui/card';
 
 export default async function DashboardPage({params}: {params: {page: string}}) {
-  const pageData = await getUserPage(params.page)
+  const pageData =  (await getUserPage(params.page))
+  console.log(pageData)
   if (!pageData) return null
   return (
     <article>
       <header>
         <Card className='flex h-fit min-h-60 flex-col justify-center shadow'>
           <CardContent className='mt-auto text-center text-3xl'>
-            {pageData.name}
+            {pageData.id}
           </CardContent>
           <CardFooter className='mt-auto flex justify-center'>
             <div className='relative'>
@@ -26,6 +25,13 @@ export default async function DashboardPage({params}: {params: {page: string}}) 
           </CardFooter>
         </Card>
       </header>
+      <main>
+        <ul>
+          {pageData.links && pageData.links.map(link => (
+            <li key={link.id}>{link.href}</li>
+          ))}
+        </ul>
+      </main>
     </article>
   );
 }

@@ -12,7 +12,7 @@ async function UserPages() {
         <ul className="space-y-4">
             {usersPages.map((page) => (
                 <li  key={page.id}>
-                <PageCard name={page.name} id={page.id} />
+                <PageCard name={page.id} />
                 </li>
             ))}
         </ul>
