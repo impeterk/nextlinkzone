@@ -60,7 +60,9 @@ export const pages = sqliteTable('pages',
  userId: text("userId")
  .notNull()
  .references(() => users.id, { onDelete: "cascade"}),
- createdAt: text('created_at').notNull().default(sql`CURRENT_TIMESTAMP`)
+ createdAt: text('created_at').notNull().default(sql`CURRENT_TIMESTAMP`),
+ image: text('image'),
+ bgColor: text('bg_color')
 })
 
 export const links = sqliteTable('links', {

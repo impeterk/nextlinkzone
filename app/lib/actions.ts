@@ -1,8 +1,13 @@
 'use server'
 
-import { signIn } from '@/auth';
+import { auth, signIn } from '@/auth';
 import { redirect } from 'next/navigation';
-import { z } from 'zod';
+import { ZodError, z } from 'zod';
+import { db } from './db';
+import { pages } from './db/schema';
+import { revalidatePath } from 'next/cache';
+import { LibsqlError } from '@libsql/client';
+import { eq } from 'drizzle-orm';
 
 export async function navigateToCreate(formData: FormData) {
     const username = formData.get('username') || ''
@@ -12,4 +17,38 @@ export async function navigateToCreate(formData: FormData) {
 export async function logInWithProvider(formData: FormData) {
         const provider = formData.get('provider') as string
         await signIn(provider)
+}
+
+export async function createNewPage(prevState: any, formData: FormData) {
+    const session = await auth()
+    let pagename
+    try {
+        if (!session) throw new Error('Unauthorized user, please log in')
+        pagename = z.object({
+            pagename: z.string().min(5, 'please provide at least 5 charactes').max(20, 'please provide maximumm 20 characters')
+        }).parse({
+            pagename: formData.get('pagename')
+        }).pagename
+        
+        await db.insert(pages).values({id: pagename, userId: session.user!.id!})
+        
+    } catch (err) {
+        if (err instanceof ZodError) {
+            return {text: err.errors[0].message}
+        }
+        if (err instanceof LibsqlError) {
+            return {text: 'Failed to create new page'}
+        }
+        console.log(err)
+        return  {text: 'Something went wrong'}  
+    }
+    revalidatePath('/dashboard/pages')
+    return {success: true, pagename}
+}
+export async function deletePage(formData: FormData) {
+    const pagename = formData.get('pagename') as string
+    await db.delete(pages).where(eq(pages.id, pagename))
+    console.log(pagename)
+    revalidatePath('/dashboard/pages')
+    redirect('/dashboard/pages')
 }

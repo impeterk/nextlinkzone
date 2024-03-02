@@ -1,6 +1,9 @@
 
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { getUserPages } from "@/app/lib/data"
+import { auth } from "@/auth"
+import {PageCard} from "./client-components";
 
 
 export function PageHeader({pageData}) {
@@ -30,3 +33,21 @@ function UserImage({image, fallback}: {image: string | null, fallback:string}) {
       </Avatar>
     );
   }
+
+export async function UserPages() {
+    const session = await auth()
+    const user = session?.user
+    if (!user) return null
+    const usersPages = await getUserPages(user.id!)
+    return (
+        <>
+        <ul className="space-y-4 max-h-[60vh] overflow-y-auto">
+            {usersPages.map((page) => (
+                <li  key={page.id}>
+                <PageCard name={page.id} />
+                </li>
+            ))}
+        </ul>
+        </>
+    )
+}

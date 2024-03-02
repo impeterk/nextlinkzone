@@ -1,5 +1,5 @@
-import PageCard from '@/components/dashboard/page-card';
-import UserPages from '@/components/dashboard/page/user-pages';
+import {NewPage, PageCard }from '@/components/dashboard/page/client-components';
+import {UserPages} from '@/components/dashboard/page/page-components';
 
 export default function DashboardPagesLayout({
   children,
@@ -9,10 +9,11 @@ export default function DashboardPagesLayout({
 
   return (
     <div className='grid h-full grid-cols-5 '>
-      <div className='col-span-1 flex h-full flex-col gap-4 '>
+      <div className='col-span-1 flex max-h-fit flex-col gap-4 '>
         <div className='prose border-b px-8 pb-4 dark:prose-invert md:prose-xl'>
           <h2>Pages</h2>
         </div>
+        <NewPage />
         <UserPages />
       </div>
       <section className='col-span-4 ml-8'>
