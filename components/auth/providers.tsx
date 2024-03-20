@@ -1,5 +1,5 @@
 import { FaGithub} from 'react-icons/fa';
-import { logInWithProvider } from '@/app/lib/actions';
+import { logInWithProvider } from '@/lib/actions';
 import ProviderButton from './providers-button';
 import { FcGoogle } from "react-icons/fc";
 

@@ -23,14 +23,14 @@ export async function createNewPage(prevState: any, formData: FormData) {
     const session = await auth()
     let pagename
     try {
-        if (!session) throw new Error('Unauthorized user, please log in')
+        if (!session?.user?.id) throw new Error('Unauthorized user, please log in')
         pagename = z.object({
             pagename: z.string().min(5, 'please provide at least 5 charactes').max(20, 'please provide maximumm 20 characters')
         }).parse({
             pagename: formData.get('pagename')
         }).pagename
         
-        await db.insert(pages).values({id: pagename, userId: session.user!.id!})
+        await db.insert(pages).values({id: pagename, userId: session.user.id, image: session.user.image})
         
     } catch (err) {
         if (err instanceof ZodError) {
@@ -45,10 +45,10 @@ export async function createNewPage(prevState: any, formData: FormData) {
     revalidatePath('/dashboard/pages')
     return {success: true, pagename}
 }
-export async function deletePage(formData: FormData) {
-    const pagename = formData.get('pagename') as string
+export async function deletePage({pagename}: {pagename: string}) {
+    //   await new Promise((resolve) => setTimeout(resolve, 5000))
+    // console.log(pagename)
     await db.delete(pages).where(eq(pages.id, pagename))
-    console.log(pagename)
     revalidatePath('/dashboard/pages')
     redirect('/dashboard/pages')
 }

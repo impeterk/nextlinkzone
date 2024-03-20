@@ -8,7 +8,7 @@ export default function DashboardPagesLayout({
 }>) {
 
   return (
-    <div className='grid h-full grid-cols-5 '>
+    <div className='grid h-full grid-cols-5 container'>
       <div className='col-span-1 flex max-h-fit flex-col gap-4 '>
         <div className='prose border-b px-8 pb-4 dark:prose-invert md:prose-xl'>
           <h2>Pages</h2>
@@ -16,7 +16,7 @@ export default function DashboardPagesLayout({
         <NewPage />
         <UserPages />
       </div>
-      <section className='col-span-4 ml-8'>
+      <section className='col-span-4 container max-w-4xl'>
         {children}
       </section>
     </div>

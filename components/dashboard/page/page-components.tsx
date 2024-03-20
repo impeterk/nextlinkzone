@@ -1,12 +1,13 @@
 
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { getUserPages } from "@/app/lib/data"
+import { getUserPages } from "@/lib/data"
 import { auth } from "@/auth"
-import {PageCard} from "./client-components";
+import {NewLink, PageCard, UserLink} from "./client-components";
 
 
-export function PageHeader({pageData}) {
+
+export async function PageHeader({pageData}: {pageData: any}) {
     return (
         <header>
         <Card className='flex h-fit min-h-60 flex-col justify-center shadow'>
@@ -21,6 +22,26 @@ export function PageHeader({pageData}) {
         </Card>
       </header>
         )
+}
+
+export function LinkList({links}: {links: any}) {
+  return (
+    <main className='mt-40'>
+        <ul className='space-y-4'>
+          {Boolean(links.length) && links.map((link: any) => (
+            <li key={link.id}><UserLink href={link.href} icon={link?.icon} name={link.name} /></li>
+          ))}
+          {!Boolean(links.length) && <>
+          <div className="w-full h-full flex items-center justify-center">
+            <span className="prose">
+
+            <h3 className="text-muted-foreground dark:text-muted">No Links Created Yet</h3>
+            </span>
+          </div>
+          </>}
+        </ul>
+      </main>
+  )
 }
 
 

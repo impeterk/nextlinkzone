@@ -1,4 +1,3 @@
-import HeroForm from '@/components/forms/hero-form';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 

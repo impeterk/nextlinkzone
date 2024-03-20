@@ -1,35 +1,53 @@
-import { getUserPage } from '@/app/lib/data';
-import { PageHeader } from '@/components/dashboard/page/page-components';
-import {UserLink} from '@/components/dashboard/page/client-components';
-import { Button } from '@/components/ui/button';
-import { Cross1Icon } from '@radix-ui/react-icons';
-import { deletePage } from '@/app/lib/actions';
+import { getUserPage } from '@/lib/data';
+import {
+  LinkList,
+  PageHeader,
+} from '@/components/dashboard/page/page-components';
+import {
+  UserLink,
+  NewLink,
+  PageOptions,
+} from '@/components/dashboard/page/client-components';
+import { Suspense } from 'react';
+import UserPageSkeleton, {
+  HeaderSkeleton,
+} from '@/components/skeleton/UserPageSkeleton';
+import { unstable_noStore } from 'next/cache';
 
-export default async function DashboardPage({params}: {params: {page: string}}) {
-  const pageData =  (await getUserPage(params.page))
-  if (!pageData) return null
+export default async function DashboardPage({
+  params,
+}: {
+  params: { page: string };
+}) {
+  const pageData = await getUserPage(params.page);
+  if (!pageData) throw new Error('Page was not found');
+
   return (
     <article className='relative'>
       <PageHeader pageData={pageData} />
-      <form 
-        action={deletePage}
-        className='absolute top-1 right-1 text-destructive'>
-          <input name="pagename" value={params.page} hidden />
-        <Button variant={'ghost'}
-        >
-          <Cross1Icon className='size-4 mr-2' />
-          <span>Delete Page</span>
-        </Button>
-          </form>
-      <main className='mt-40'>
-        <ul className='space-y-4'>
-          {pageData.links && pageData.links.map(link => (
-            <li key={link.id}><UserLink href={link.href} icon={link?.icon} name={link.name} /></li>
-          ))}
-        </ul>
-      </main>
+      {/* <DeletePageForm pagename={params.page} /> */}
+      <div className="absolute top-1 right-1">
+
+      <PageOptions />
+      </div>
+      <LinkList links={pageData?.links} />
+      <NewLink />
     </article>
   );
 }
 
+async function UserPage({ name }: { name: string }) {
+  // await new Promise((resolve) => setTimeout(resolve, 5000))
+  unstable_noStore();
+  const pageData = await getUserPage(name);
+  if (!pageData) throw new Error('Page was not found');
 
+  return (
+    <>
+      <PageHeader pageData={pageData} />
+      {/* <DeletePageForm pagename={name} /> */}
+      <LinkList links={pageData?.links} />
+      <NewLink />
+    </>
+  );
+}
