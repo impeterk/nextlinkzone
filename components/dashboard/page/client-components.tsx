@@ -1,7 +1,7 @@
 'use client';
 import { Button } from '@/components/ui/button';
 import { Icon } from '@iconify-icon/react';
-import { redirect, useParams, usePathname, useRouter } from 'next/navigation';
+import { useParams, usePathname, useRouter } from 'next/navigation';
 import { Card, CardHeader, CardTitle } from '../../ui/card';
 import Link from 'next/link';
 import clsx from 'clsx';
@@ -17,12 +17,7 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import {
-  Cross1Icon,
-  DotsVerticalIcon,
-  PlusIcon,
-  TrashIcon,
-} from '@radix-ui/react-icons';
+import { DotsVerticalIcon, PlusIcon, TrashIcon } from '@radix-ui/react-icons';
 import { createNewPage, deletePage } from '@/lib/actions';
 import { useEffect, useRef, useState } from 'react';
 import { useFormState, useFormStatus } from 'react-dom';
@@ -46,7 +41,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { DeletePageForm } from '@/components/forms';
 
 export function UserLink({
   href,
@@ -99,14 +93,14 @@ export function PageCard({ name }: { name: string }) {
 export function NewPage() {
   const [message, dispatch] = useFormState(createNewPage, undefined);
   const [open, setOpen] = useState(false);
-  const closeBtnRef = useRef(null)
+  const closeBtnRef = useRef<HTMLButtonElement>(null);
   const router = useRouter();
   useEffect(() => {
     // @ts-ignore
     if (message?.success) {
       // @ts-ignore
       router.push(`/dashboard/pages/${message.pagename}`);
-      closeBtnRef.current.click()
+      closeBtnRef.current?.click();
     }
   }, [message, router]);
   return (
@@ -143,7 +137,7 @@ export function NewPage() {
             )}
           </div>
           <DialogFooter>
-          <DialogClose asChild ref={closeBtnRef}>
+            <DialogClose asChild ref={closeBtnRef}>
               <Button
                 type='button'
                 variant='outline'
@@ -254,7 +248,7 @@ function DeletePage() {
   const form = useForm();
   const { isSubmitting } = form.formState;
   form.setValue('pagename', page);
-  async function onSubmit(value) {
+  async function onSubmit(value: any) {
     return await deletePage(value);
   }
 
