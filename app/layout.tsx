@@ -11,11 +11,9 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({
-  children,
-  auth,
+  children
 }: Readonly<{
   children: React.ReactNode;
-  auth: React.ReactNode;
 }>) {
   return (
     <html lang='en' suppressHydrationWarning>
@@ -28,7 +26,6 @@ export default function RootLayout({
         >
           <NextTopLoader height={5} color='#10b981' />
           {children}
-          {auth}
         </ThemeProvider>
       </body>
     </html>

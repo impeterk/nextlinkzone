@@ -1,9 +1,10 @@
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
+import { WorldGlobe } from './_components/world-globe';
 
 export default function Home() {
   return (
-    <>
+    <div className='flex'>
       <section className='w-full max-w-lg space-y-20 md:mt-20'>
         <div className='prose text-pretty dark:prose-invert md:prose-xl'>
           <h1>
@@ -23,6 +24,7 @@ export default function Home() {
         </Link>
         </div>
       </section>
-    </>
+      <WorldGlobe />
+    </div>
   );
 }
