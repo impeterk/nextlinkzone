@@ -65,7 +65,7 @@ import {
 import { toast } from 'sonner';
 import { useDebounce } from '@uidotdev/usehooks';
 import { CiPalette } from 'react-icons/ci';
-import { tailwindColors } from '@/lib/utils';
+import { UploadButton, tailwindColors } from '@/lib/utils';
 import { LuCheck, LuImagePlus } from 'react-icons/lu';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
@@ -631,6 +631,7 @@ export function ChangeUserImage({ userImg = '' }: { userImg?: string }) {
   const [img, setImg] = useState(userImg);
   const [submitting, setSubmitting] = useState(false);
   function handleOpen() {
+    if (open && img !== userImg) setImg(userImg)
     setOpen(!open);
   }
 
@@ -663,7 +664,7 @@ export function ChangeUserImage({ userImg = '' }: { userImg?: string }) {
             Set new Image or Remove it completely <br />
           </DialogDescription>
         </DialogHeader>
-        <div className='flex flex-col items-center justify-center'>
+        <div className='flex flex-col items-center justify-center gap-8'>
           <div className='relative'>
             <Avatar className=' size-40  border-2 border-primary'>
               {img && <AvatarImage src={img} alt={`user page avatar`} />}
@@ -680,10 +681,25 @@ export function ChangeUserImage({ userImg = '' }: { userImg?: string }) {
               <Cross1Icon className='size-6' />
             </Button>
           </div>
+          <UploadButton 
+           endpoint="imageUploader"
+           className="ut-button:bg-accent ut-button:text-accent-foreground"
+           onUploadProgress={() => {setSubmitting(true)}}
+           onClientUploadComplete={(res) => {
+             // Do something with the response
+             setImg(res[0].url)
+             setSubmitting(false)
+            }}
+            onUploadError={(error: Error) => {
+              // Do something with the error.
+             setSubmitting(false)
+
+              alert(`ERROR! ${error.message}`);
+            }} />
         </div>
-        <DialogFooter className='mt-8'>
+        <DialogFooter >
           <Button
-            variant='secondary'
+            variant='outline'
             size='lg'
             onClick={handleOpen}
             disabled={submitting}

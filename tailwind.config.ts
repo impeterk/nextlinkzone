@@ -3,6 +3,7 @@ const {
 } = require('tailwindcss/lib/util/flattenColorPalette');
 
 import type { Config } from 'tailwindcss';
+import { withUt } from "uploadthing/tw";
 
 const config = {
   darkMode: ['class'],
@@ -96,4 +97,4 @@ function addVariablesForColors({ addBase, theme }: any) {
   });
 }
 
-export default config;
+export default withUt(config);
