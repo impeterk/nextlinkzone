@@ -301,7 +301,7 @@ export function NewLink() {
     if (iconsList.length > 0) setOpenList(!openList)
   }
   return (
-    <footer className='mt-8'>
+    <footer>
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
           <Button

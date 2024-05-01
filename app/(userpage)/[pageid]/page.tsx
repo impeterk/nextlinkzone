@@ -7,6 +7,8 @@ import {
 import { Suspense } from 'react';
 import UserPageSkeleton from '@/components/skeleton/UserPageSkeleton';
 
+
+
 export default async function Page({ params }: { params: { pageid: string } }) {
   // const pageData =  (await getUserPage(params.pageid))
   // if (!pageData) return null

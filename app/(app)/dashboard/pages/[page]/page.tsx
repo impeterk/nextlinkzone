@@ -14,6 +14,7 @@ import UserPageSkeleton, {
   HeaderSkeleton,
 } from '@/components/skeleton/UserPageSkeleton';
 import { unstable_noStore } from 'next/cache';
+import { DropdownMenuSeparator } from '@/components/ui/dropdown-menu';
 
 export default async function DashboardPage({
   params,
@@ -33,6 +34,9 @@ export default async function DashboardPage({
       <ChangeHeaderColor currentColor={pageData?.bgColor ?? 'hsl(var(--card))' }/>
       </div>
       <LinkList links={pageData?.links} displayDelete={true} />
+      <div className="my-4">
+      <DropdownMenuSeparator />
+      </div>
       <NewLink />
     </article>
   );
