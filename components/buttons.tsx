@@ -1,9 +1,7 @@
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
-import { LuLogOut } from "react-icons/lu";
 import logo from "@/app/icon.png"
 import Image from 'next/image';
-import {signOut, auth} from '@/auth'
 
 export function Logo({href = '/'}) {
   return (
