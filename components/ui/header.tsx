@@ -1,10 +1,10 @@
 import { ThemeToggle } from "@/components/theme/theme-toggle";
-import { LogOut, Logo } from '@/components/buttons'
-import NavLinks from "../nav-links";
+import { Logo } from '@/components/buttons'
 import SigninLink from "@/app/(app)/signin/SigninLink";
 import {auth} from '@/auth'
+import UserDropDown from "@/app/(app)/_components/user-dropdown";
 
-export default async  function Header() {
+export default async function Header() {
   const session = await auth()
   const user = session?.user
   return (
@@ -12,9 +12,6 @@ export default async  function Header() {
     <header className="border-b w-full shadow py-4">
       <div className="flex justify-between container items-center">
         <Logo href={user ? '/dashboard/pages' : '/' }/>
-        {user && <>
-        <h3 className="text-xl text-popover-foreground">👋 Hello {user.name}</h3>
-        </>}
 
         <div className="flex items-center gap-6">
           <div className="flex items-center">
@@ -24,8 +21,7 @@ export default async  function Header() {
               </>)}
             {user && (
               <>
-                <NavLinks />
-                <LogOut />
+                <UserDropDown user={user} />
               </>
             )}
           </div>
@@ -35,3 +31,4 @@ export default async  function Header() {
     </header>
   )
 }
+

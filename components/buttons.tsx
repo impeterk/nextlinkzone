@@ -5,23 +5,6 @@ import logo from "@/app/icon.png"
 import Image from 'next/image';
 import {signOut, auth} from '@/auth'
 
-export function LogOut() {
-  return (
-    <form
-        action={
-          async() => {
-            'use server';
-            await signOut({redirectTo: "/"})
-          }
-        }>
-    <Button variant={'link'} className="flex items-center gap-2">
-      <LuLogOut className='size-5' />
-      <span>Log Out</span>
-    </Button>
-    </form>
-  )
-}
-
 export function Logo({href = '/'}) {
   return (
     <Link href={href}>

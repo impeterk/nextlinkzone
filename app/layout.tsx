@@ -4,6 +4,7 @@ import { GeistMono } from 'geist/font/mono';
 import './globals.css';
 import { ThemeProvider } from '@/components/theme/theme-provider';
 import NextTopLoader from 'nextjs-toploader';
+import { Toaster } from '@/components/ui/sonner';
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -26,6 +27,7 @@ export default function RootLayout({
         >
           <NextTopLoader height={5} color='#10b981' />
           {children}
+        <Toaster />
         </ThemeProvider>
       </body>
     </html>

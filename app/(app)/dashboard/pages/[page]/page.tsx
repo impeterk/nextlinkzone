@@ -5,8 +5,9 @@ import {
 } from '@/components/dashboard/page/page-components';
 import {
   UserLink,
-  NewLink,
   PageOptions,
+  NewLink,
+  ChangeHeaderColor
 } from '@/components/dashboard/page/client-components';
 import { Suspense } from 'react';
 import UserPageSkeleton, {
@@ -21,33 +22,33 @@ export default async function DashboardPage({
 }) {
   const pageData = await getUserPage(params.page);
   if (!pageData) throw new Error('Page was not found');
+  // console.log(pageData)
 
   return (
     <article className='relative'>
       <PageHeader pageData={pageData} />
       {/* <DeletePageForm pagename={params.page} /> */}
-      <div className="absolute top-1 right-1">
-
+      <div className="absolute top-1 right-1 flex flex-col">
       <PageOptions />
+      <ChangeHeaderColor currentColor={pageData?.bgColor ?? 'hsl(var(--card))' }/>
       </div>
-      <LinkList links={pageData?.links} />
+      <LinkList links={pageData?.links} displayDelete={true} />
       <NewLink />
     </article>
   );
 }
 
-async function UserPage({ name }: { name: string }) {
-  // await new Promise((resolve) => setTimeout(resolve, 5000))
-  unstable_noStore();
-  const pageData = await getUserPage(name);
-  if (!pageData) throw new Error('Page was not found');
-
-  return (
-    <>
-      <PageHeader pageData={pageData} />
-      {/* <DeletePageForm pagename={name} /> */}
-      <LinkList links={pageData?.links} />
-      <NewLink />
-    </>
-  );
-}
+// async function UserPage({ name }: { name: string }) {
+//   // await new Promise((resolve) => setTimeout(resolve, 5000))
+//   unstable_noStore();
+//   const pageData = await getUserPage(name);
+//   if (!pageData) throw new Error('Page was not found');
+//   return (
+//     <>
+//       <PageHeader pageData={pageData} />
+//       {/* <DeletePageForm pagename={name} /> */}
+//       <LinkList links={pageData?.links} />
+//       <NewLink />
+//     </>
+//   );
+// }

@@ -3,14 +3,14 @@ import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { getUserPages } from "@/lib/data"
 import { auth } from "@/auth"
-import {NewLink, PageCard, UserLink} from "./client-components";
+import {LinkDelete, PageCard, UserLink} from "./client-components";
 
 
 
 export async function PageHeader({pageData}: {pageData: any}) {
     return (
         <header>
-        <Card className='flex h-fit min-h-60 flex-col justify-center shadow'>
+        <Card className='flex h-fit min-h-60 flex-col justify-center shadow' id={`${pageData.id}Header`} style={{backgroundColor: pageData.bgColor ?? 'hsl(var(--card))'}}>
           <CardContent className='mt-auto text-center text-3xl'>
             {pageData.id}
           </CardContent>
@@ -24,12 +24,16 @@ export async function PageHeader({pageData}: {pageData: any}) {
         )
 }
 
-export function LinkList({links}: {links: any}) {
+export function LinkList({links, displayDelete = false}: {links: any, displayDelete?: boolean}) {
   return (
     <main className='mt-40'>
         <ul className='space-y-4'>
           {Boolean(links.length) && links.map((link: any) => (
-            <li key={link.id}><UserLink href={link.href} icon={link?.icon} name={link.name} /></li>
+            <li key={link.id} className="relative"><UserLink href={link.href} icon={link?.icon} name={link.name} />
+            {displayDelete && <>
+            <LinkDelete linkId={link.id} />
+            </>}
+            </li>
           ))}
           {!Boolean(links.length) && <>
           <div className="w-full h-full flex items-center justify-center">

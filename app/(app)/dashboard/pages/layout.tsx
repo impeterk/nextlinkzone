@@ -8,6 +8,7 @@ export default function DashboardPagesLayout({
 }>) {
 
   return (
+    <>
     <div className='grid h-full grid-cols-5 container'>
       <div className='col-span-1 flex max-h-fit flex-col gap-4 '>
         <div className='prose border-b px-8 pb-4 dark:prose-invert md:prose-xl'>
@@ -20,5 +21,6 @@ export default function DashboardPagesLayout({
         {children}
       </section>
     </div>
+    </>
   );
 }

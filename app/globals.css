@@ -73,4 +73,8 @@
     body {
       @apply bg-gradient-to-tr from-zinc-300 to-zinc-100 dark:from-zinc-950 dark:to-zinc-900 text-foreground font-sans;
   }
+
+  .scrollbar-hidden::-webkit-scrollbar {
+    display: none;
+}
 }

@@ -2,16 +2,18 @@
 import React from "react";
 import { motion } from "framer-motion";
 import dynamic from "next/dynamic";
+import { useTheme } from "next-themes";
 
 const World = dynamic(() => import("@/components/ui/globe").then((m) => m.World), {
   ssr: false,
 });
 
 export function WorldGlobe() {
+  const {theme} = useTheme() 
   const globeConfig = {
     pointSize: 4,
     globeColor: "#065656",
-    showAtmosphere: true,
+    showAtmosphere: theme === 'light',
     atmosphereColor: "#FFFFFF",
     atmosphereAltitude: 0.1,
     emissive: "#065656",
@@ -396,7 +398,7 @@ export function WorldGlobe() {
 
   return (
     <div className="flex flex-row items-center justify-center relative w-full">
-        <div className="absolute top-0 h-[80vh] w-full">
+        <div className="absolute top-0 h-[80vh] w-full z-50 ">
           <World data={sampleArcs} globeConfig={globeConfig} />
           </div>
     </div>
