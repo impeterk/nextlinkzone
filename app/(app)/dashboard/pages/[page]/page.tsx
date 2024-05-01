@@ -4,16 +4,10 @@ import {
   PageHeader,
 } from '@/components/dashboard/page/page-components';
 import {
-  UserLink,
   PageOptions,
   NewLink,
   ChangeHeaderColor
 } from '@/components/dashboard/page/client-components';
-import { Suspense } from 'react';
-import UserPageSkeleton, {
-  HeaderSkeleton,
-} from '@/components/skeleton/UserPageSkeleton';
-import { unstable_noStore } from 'next/cache';
 import { DropdownMenuSeparator } from '@/components/ui/dropdown-menu';
 
 export default async function DashboardPage({

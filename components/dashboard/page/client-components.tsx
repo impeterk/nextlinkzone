@@ -2,7 +2,7 @@
 import { Button } from '@/components/ui/button';
 import { Icon } from '@iconify-icon/react';
 import { useParams, usePathname, useRouter } from 'next/navigation';
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '../../ui/card';
+import { Card, CardHeader, CardTitle } from '../../ui/card';
 import Link from 'next/link';
 import clsx from 'clsx';
 import {
@@ -19,7 +19,6 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import {
   Cross1Icon,
-  CrossCircledIcon,
   DotsVerticalIcon,
   PlusIcon,
   TrashIcon,
@@ -31,7 +30,7 @@ import {
   deletePage,
   setHeaderColor,
 } from '@/lib/actions';
-import { ChangeEvent, FormEvent, ReactElement, ReactEventHandler, useEffect, useRef, useState } from 'react';
+import { ChangeEvent, FormEvent, ReactElement,  useEffect, useState } from 'react';
 import { useFormState, useFormStatus } from 'react-dom';
 import { ImSpinner2 } from 'react-icons/im';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -46,7 +45,7 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-import { TbColorPicker, TbLinkPlus } from 'react-icons/tb';
+import {  TbLinkPlus } from 'react-icons/tb';
 import {
   DropdownMenu,
   DropdownMenuContent,

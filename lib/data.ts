@@ -12,7 +12,7 @@ export async function getUserPages(userId: string) {
 }
 
 export async function getUserPage(pagename: string) {
-  // unstable_noStore()
+  unstable_noStore()
     return await db.query.pages.findFirst({
         where: eq(pages.id, pagename),
         with: {

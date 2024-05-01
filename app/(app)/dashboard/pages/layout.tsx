@@ -1,4 +1,4 @@
-import {NewPage, PageCard }from '@/components/dashboard/page/client-components';
+import {NewPage }from '@/components/dashboard/page/client-components';
 import {UserPages} from '@/components/dashboard/page/page-components';
 
 export default function DashboardPagesLayout({
