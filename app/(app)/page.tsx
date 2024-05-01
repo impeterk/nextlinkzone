@@ -2,6 +2,7 @@ import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { WorldGlobe } from './_components/world-globe';
 
+// export const dynamic = 'force-static'
 
 export default function Home() {
   return (
@@ -15,14 +16,14 @@ export default function Home() {
             One link to help you share everything you create, curate and sell
             from all your social media profiles.
           </p>
-        <Link href='/signin'>
-          <Button
-            className='w-full bg-emerald-500 py-6 text-xl font-semibold dark:bg-emerald-400'
-            size='lg'
-          >
-            Join for free
-          </Button>
-        </Link>
+          <Link href='/signin'>
+            <Button
+              className='w-full bg-emerald-500 py-6 text-xl font-semibold dark:bg-emerald-400'
+              size='lg'
+            >
+              Join for free
+            </Button>
+          </Link>
         </div>
       </section>
       <WorldGlobe />

@@ -18,6 +18,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import {
+  CheckIcon,
   Cross1Icon,
   DotsVerticalIcon,
   PlusIcon,
@@ -29,8 +30,15 @@ import {
   deleteLink,
   deletePage,
   setHeaderColor,
+  setNewPageImage,
 } from '@/lib/actions';
-import { ChangeEvent, FormEvent, ReactElement,  useEffect, useState } from 'react';
+import {
+  ChangeEvent,
+  FormEvent,
+  ReactElement,
+  useEffect,
+  useState,
+} from 'react';
 import { useFormState, useFormStatus } from 'react-dom';
 import { ImSpinner2 } from 'react-icons/im';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -45,7 +53,7 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-import {  TbLinkPlus } from 'react-icons/tb';
+import { TbLinkPlus } from 'react-icons/tb';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -56,8 +64,10 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { toast } from 'sonner';
 import { useDebounce } from '@uidotdev/usehooks';
-import { CiPalette } from "react-icons/ci";
+import { CiPalette } from 'react-icons/ci';
 import { tailwindColors } from '@/lib/utils';
+import { LuCheck, LuImagePlus } from 'react-icons/lu';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 export function UserLink({
   href,
@@ -66,7 +76,7 @@ export function UserLink({
 }: {
   href: string;
   name: string;
-  icon: string | null
+  icon: string | null;
 }) {
   return (
     <a
@@ -144,19 +154,25 @@ export function PageCard({ name }: { name: string }) {
 }
 
 export function NewPage() {
-  const [message, dispatch] = useFormState(createNewPage, undefined);
   const [open, setOpen] = useState(false);
+  const [message, setMessage] = useState('');
   const router = useRouter();
-  useEffect(() => {
-    // @ts-ignore
-    if (message?.success) {
-      // @ts-ignore
-      router.push(`/dashboard/pages/${message.pagename}`);
-      setOpen(false)
+
+  async function handleSubmit(formData: FormData) {
+    const res = await createNewPage(formData);
+    if (res?.text) setMessage(res.text);
+    if (res?.success) {
+      router.push(`/dashboard/pages/${res.pagename}`);
+      setOpen(false);
     }
-  }, [message, router]);
+  }
+
+  function handleOpen() {
+    setOpen(!open);
+    if (message && !open) setMessage('');
+  }
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={open} onOpenChange={handleOpen}>
       <DialogTrigger asChild>
         <Button
           variant='outline'
@@ -167,7 +183,7 @@ export function NewPage() {
         </Button>
       </DialogTrigger>
       <DialogContent className='sm:max-w-[425px]'>
-        <form action={dispatch}>
+        <form action={handleSubmit}>
           <DialogHeader>
             <DialogTitle>Create New Page</DialogTitle>
             <DialogDescription>Create your new unique page</DialogDescription>
@@ -185,15 +201,12 @@ export function NewPage() {
               />
             </div>
             {message && (
-              <div className='text-center text-destructive'>{message.text}</div>
+              <div className='text-center text-destructive'>{message}</div>
             )}
           </div>
           <DialogFooter>
             <DialogClose asChild>
-              <Button
-                type='button'
-                variant='outline'
-              >
+              <Button type='button' variant='outline'>
                 Close
               </Button>
             </DialogClose>
@@ -236,7 +249,7 @@ export function NewLink() {
   const [searchIcon, setSearchIcon] = useState('');
   const [iconsList, setIconsList] = useState([]);
   const [linkIcon, setLinkIcon] = useState('');
-  const [openList, setOpenList] = useState(false)
+  const [openList, setOpenList] = useState(false);
 
   const params = useParams();
   const router = useRouter();
@@ -253,15 +266,15 @@ export function NewLink() {
   });
 
   async function onSubmit(values: z.infer<typeof newLinkSchema>) {
-    values.icon = linkIcon
+    values.icon = linkIcon;
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
     await createNewLink(values);
     router.refresh();
     setOpen(!open);
     form.reset();
-    setLinkIcon('')
-    setIconsList([])
+    setLinkIcon('');
+    setIconsList([]);
   }
 
   function handleIconChange(e: ChangeEvent<HTMLInputElement>) {
@@ -277,27 +290,29 @@ export function NewLink() {
         `https://api.iconify.design/search?query=${debouncedSearchIcon}`
       );
       const { icons } = await res.json();
-      if (icons.length > 0 && !openList) setOpenList(true)
+      if (icons.length > 0 && !openList) setOpenList(true);
       setIconsList(icons);
     }
     if (debouncedSearchIcon) {
       getIcons();
     }
     return () => {
-      setIconsList([])
-      setOpenList(false)
-    }
+      setIconsList([]);
+      setOpenList(false);
+    };
   }, [debouncedSearchIcon]);
 
-  function handleSelectIcon(icon:string) {
-    setLinkIcon(icon)
-    setOpenList(false)
+  function handleSelectIcon(icon: string) {
+    setLinkIcon(icon);
+    setOpenList(false);
   }
 
-  function handleLinkIconClick(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
-    e.preventDefault()
-    e.stopPropagation()
-    if (iconsList.length > 0) setOpenList(!openList)
+  function handleLinkIconClick(
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) {
+    e.preventDefault();
+    e.stopPropagation();
+    if (iconsList.length > 0) setOpenList(!openList);
   }
   return (
     <footer>
@@ -340,21 +355,26 @@ export function NewLink() {
                         >
                           <Icon icon={linkIcon} />
                         </Button>
-                        <Card className='absolute left-2 top-0 translate-y-12 grid w-max grid-cols-12 gap-px'>
-                          {(openList && iconsList.length > 0) &&
+                        <Card className='absolute left-2 top-0 grid w-max translate-y-12 grid-cols-12 gap-px'>
+                          {openList &&
+                            iconsList.length > 0 &&
                             iconsList.map((icon) => (
-                              <Button variant="ghost" size="icon" type="button"  
-                              key={icon}
-                              value={icon}
-                              onClick={() => {handleSelectIcon(icon)}}
-                              asChild
+                              <Button
+                                variant='ghost'
+                                size='icon'
+                                type='button'
+                                key={icon}
+                                value={icon}
+                                onClick={() => {
+                                  handleSelectIcon(icon);
+                                }}
+                                asChild
                               >
-
-                              <Icon
-                              icon={icon}
-                              className='text-xl'
-                              value={icon}
-                              />
+                                <Icon
+                                  icon={icon}
+                                  className='text-xl'
+                                  value={icon}
+                                />
                               </Button>
                             ))}
                         </Card>
@@ -422,8 +442,9 @@ export function PageOptions() {
         </DropdownMenuTrigger>
         <DropdownMenuContent side='bottom' align='end'>
           <DropdownMenuLabel>Page Options</DropdownMenuLabel>
+          {/* 
           <DropdownMenuSeparator/>
-          {/* <DropdownMenuItem asChild>
+          <DropdownMenuItem asChild>
             <>
             <ChangeHeaderColor>
               Change Color
@@ -448,74 +469,109 @@ export function PageOptions() {
   );
 }
 
-export function ChangeHeaderColor({ children, currentColor}: {children?: ReactElement, currentColor:string}) {
-  const params = useParams()
-  const [header, setHeader] = useState<HTMLDivElement |null>(null)
-  const [openPalette, setOpenPalette] = useState(false)
-  const [newColor, setNewColor] = useState('')
+export function ChangeHeaderColor({
+  children,
+  currentColor,
+}: {
+  children?: ReactElement;
+  currentColor: string;
+}) {
+  const params = useParams();
+  const [header, setHeader] = useState<HTMLDivElement | null>(null);
+  const [openPalette, setOpenPalette] = useState(false);
+  const [newColor, setNewColor] = useState('');
 
-  const router = useRouter()
+  const router = useRouter();
   useEffect(() => {
-    const pageHeader = document.querySelector(`#${params.page}Header`) as HTMLDivElement
-    setHeader(pageHeader)
-    return() => {
-      setHeader(null)
-    }
-  }, [params.page])
+    const pageHeader = document.querySelector(
+      `#${params.page}Header`
+    ) as HTMLDivElement;
+    setHeader(pageHeader);
+    return () => {
+      setHeader(null);
+    };
+  }, [params.page]);
 
   function handleColorClick(color: string) {
-    if (!header) return null
-      header.style.background = color
-      setNewColor(color)
+    if (!header) return null;
+    header.style.background = color;
+    setNewColor(color);
   }
-  const setHeaderColorWithPageId = setHeaderColor.bind(null, params.page as string)
-  async function handleSave(color: string | null){
-   const setNewHeaderColor =   setHeaderColorWithPageId.bind(null, color)
-setOpenPalette(false)
+  const setHeaderColorWithPageId = setHeaderColor.bind(
+    null,
+    params.page as string
+  );
+  async function handleSave(color: string | null) {
+    const setNewHeaderColor = setHeaderColorWithPageId.bind(null, color);
+    setOpenPalette(false);
     toast.promise(setNewHeaderColor(), {
       loading: 'Saving',
-      success: color ? 'New Color has been set' : 'Color has been Reset to default',
+      success: color
+        ? 'New Color has been set'
+        : 'Color has been Reset to default',
       error: 'Error',
     });
-    setNewColor('')
-    router.refresh()
+    setNewColor('');
+    router.refresh();
   }
 
   function handleCancel() {
-    setOpenPalette(false)
-    setNewColor('')
-    if (!header) return null
-    header.style.backgroundColor = currentColor
+    setOpenPalette(false);
+    setNewColor('');
+    if (!header) return null;
+    header.style.backgroundColor = currentColor;
   }
 
+  return (
+    <div className='relative'>
+      <Button
+        variant='ghost'
+        size='icon'
+        onClick={() => {
+          setOpenPalette(!openPalette);
+        }}
+      >
+        <CiPalette className='size-6' />
+        {children}
+      </Button>
+      {openPalette && (
+        <>
+          <div className='absolute -right-1 top-full w-max translate-y-1/2 '>
+            <Card className='scrollbar-hidden grid max-h-40 grid-flow-row grid-cols-11 gap-px overflow-y-scroll border'>
+              {tailwindColors.map((color, index) => (
+                <Button
+                  key={color + index}
+                  size='icon'
+                  variant='ghost'
+                  style={{ background: color }}
+                  onClick={() => handleColorClick(color)}
+                />
+              ))}
+            </Card>
 
-
-  return(
-    <div className="relative">
-    <Button variant="ghost" size="icon" onClick={() => {setOpenPalette(!openPalette)}}>
-      <CiPalette className='size-6'/>
-      {children}
-    </Button>
-    {openPalette && <>
-    <div className='absolute w-max -right-1 top-full translate-y-1/2 '>
-    <Card className='grid grid-cols-11 grid-flow-row max-h-40 overflow-y-scroll border gap-px scrollbar-hidden' >
-      {tailwindColors.map((color, index) => (
-        <Button key={color + index} size="icon" variant="ghost" style={{background: color}} onClick={(() => handleColorClick(color))} />
-      ))}
-    </Card>
-
-    <Card className='flex flex-row items-center justify-end gap-4 mt-2 py-2 px-4'>
-      <Button variant={'destructive'} className='mr-auto' onClick={() => handleSave(null)}>Reset Color</Button>
-      <Button variant={'secondary'} onClick={() => handleCancel()}>Cancel</Button>
-      <Button variant={'default'} onClick={() => handleSave(newColor)}>Save</Button>
-    </Card>
-      </div>
-      </>}
+            <Card className='mt-2 flex flex-row items-center justify-end gap-4 px-4 py-2'>
+              <Button
+                variant={'destructive'}
+                className='mr-auto'
+                onClick={() => handleSave(null)}
+              >
+                Reset Color
+              </Button>
+              <Button variant={'secondary'} onClick={() => handleCancel()}>
+                Cancel
+              </Button>
+              <Button variant={'default'} onClick={() => handleSave(newColor)}>
+                Save
+              </Button>
+            </Card>
+          </div>
+        </>
+      )}
     </div>
-  )
+  );
 }
 
-function DeletePage() { 
+function DeletePage() {
   const { page } = useParams<{ page: string }>();
   const form = useForm();
   const { isSubmitting } = form.formState;
@@ -565,5 +621,84 @@ function DeletePage() {
         </form>
       </Form>
     </DialogContent>
+  );
+}
+
+export function ChangeUserImage({ userImg = '' }: { userImg?: string }) {
+  const params = useParams();
+  const fallback = params.page[0];
+  const [open, setOpen] = useState(false);
+  const [img, setImg] = useState(userImg);
+  const [submitting, setSubmitting] = useState(false);
+  function handleOpen() {
+    setOpen(!open);
+  }
+
+  async function handleSave() {
+    setSubmitting(true);
+    toast.promise(setNewPageImage(params.page as string, img), {
+      loading: 'Saving',
+      success: img ? 'New Image has been saved' : 'Image has been removed',
+      error: 'Error',
+    });
+    handleOpen();
+    setSubmitting(false);
+  }
+
+  return (
+    <Dialog open={open} onOpenChange={handleOpen}>
+      <DialogTrigger asChild>
+        <Button
+          variant='ghost'
+          className='absolute top-0 size-40 rounded-full opacity-0 hover:opacity-70'
+          size='icon'
+        >
+          <LuImagePlus className='size-20' />{' '}
+        </Button>
+      </DialogTrigger>
+      <DialogContent className='max-w-md'>
+        <DialogHeader>
+          <DialogTitle>Change Page Image</DialogTitle>
+          <DialogDescription>
+            Set new Image or Remove it completely <br />
+          </DialogDescription>
+        </DialogHeader>
+        <div className='flex flex-col items-center justify-center'>
+          <div className='relative'>
+            <Avatar className=' size-40  border-2 border-primary'>
+              {img && <AvatarImage src={img} alt={`user page avatar`} />}
+              <AvatarFallback className='text-5xl capitalize'>
+                {fallback}
+              </AvatarFallback>
+            </Avatar>
+            <Button
+              variant='destructive'
+              size='icon'
+              onClick={() => setImg('')}
+              className='absolute right-0 top-0'
+            >
+              <Cross1Icon className='size-6' />
+            </Button>
+          </div>
+        </div>
+        <DialogFooter className='mt-8'>
+          <Button
+            variant='secondary'
+            size='lg'
+            onClick={handleOpen}
+            disabled={submitting}
+          >
+            <Cross1Icon className='mr-2 size-5' />
+            Close
+          </Button>
+          <form action={handleSave}>
+            <Button size='lg' disabled={submitting}>
+              <LuCheck className='mr-2 size-5' />
+              Save
+            </Button>
+          </form>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 }

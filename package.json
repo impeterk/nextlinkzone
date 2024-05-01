@@ -6,7 +6,8 @@
     "dev": "next dev --turbo",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "format": "prettier --write --ignore-path .gitignore ."
   },
   "dependencies": {
     "@auth/core": "^0.27.0",
@@ -45,7 +46,6 @@
     "three": "^0.163.0",
     "three-globe": "^2.31.0",
     "zod": "^3.22.4"
-    
   },
   "devDependencies": {
     "@iconify-icon/react": "^2.1.0",

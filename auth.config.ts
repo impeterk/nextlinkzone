@@ -15,11 +15,11 @@ export const authConfig = {
       if (isOnDashboard) {
         if (isLoggedIn) return true;
         return false; // Redirect unauthenticated users to login page
-      } else if (isLoggedIn &&  nextUrl.pathname === '/signin') {
+      } else if (isLoggedIn && nextUrl.pathname === '/signin') {
         return Response.redirect(new URL('/dashboard/pages', nextUrl));
       }
       return true;
     },
   },
-  providers: []
+  providers: [],
 } satisfies NextAuthConfig;

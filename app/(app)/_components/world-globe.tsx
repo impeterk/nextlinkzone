@@ -1,28 +1,31 @@
-"use client";
-import React from "react";
-import dynamic from "next/dynamic";
-import { useTheme } from "next-themes";
+'use client';
+import React from 'react';
+import dynamic from 'next/dynamic';
+import { useTheme } from 'next-themes';
 
-const World = dynamic(() => import("@/components/ui/globe").then((m) => m.World), {
-  ssr: false,
-});
+const World = dynamic(
+  () => import('@/components/ui/globe').then((m) => m.World),
+  {
+    ssr: false,
+  }
+);
 
 export function WorldGlobe() {
-  const {theme} = useTheme() 
+  const { theme } = useTheme();
   const globeConfig = {
     pointSize: 4,
-    globeColor: "#065656",
+    globeColor: '#065656',
     showAtmosphere: theme === 'light',
-    atmosphereColor: "#FFFFFF",
+    atmosphereColor: '#FFFFFF',
     atmosphereAltitude: 0.1,
-    emissive: "#065656",
+    emissive: '#065656',
     emissiveIntensity: 0.1,
     shininess: 0.9,
-    polygonColor: "rgba(255,255,255,0.7)",
-    ambientLight: "#3af8b2",
-    directionalLeftLight: "#ffffff",
-    directionalTopLight: "#ffffff",
-    pointLight: "#ffffff",
+    polygonColor: 'rgba(255,255,255,0.7)',
+    ambientLight: '#3af8b2',
+    directionalLeftLight: '#ffffff',
+    directionalTopLight: '#ffffff',
+    pointLight: '#ffffff',
     arcTime: 1000,
     arcLength: 0.9,
     rings: 1,
@@ -31,7 +34,7 @@ export function WorldGlobe() {
     autoRotate: true,
     autoRotateSpeed: 0.5,
   };
-  const colors = ["#07d56a", "#3cf6f6", "#64c2f2"];
+  const colors = ['#07d56a', '#3cf6f6', '#64c2f2'];
   const sampleArcs = [
     {
       order: 1,
@@ -396,10 +399,10 @@ export function WorldGlobe() {
   ];
 
   return (
-    <div className="flex flex-row items-center justify-center relative w-full">
-        <div className="absolute top-0 h-[80vh] w-full z-50 ">
-          <World data={sampleArcs} globeConfig={globeConfig} />
-          </div>
+    <div className='relative flex w-full flex-row items-center justify-center'>
+      <div className='absolute top-0 z-50 h-[80vh] w-full '>
+        <World data={sampleArcs} globeConfig={globeConfig} />
+      </div>
     </div>
   );
 }

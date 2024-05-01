@@ -1,9 +1,14 @@
 import NextAuth from 'next-auth';
 import { authConfig } from './auth.config';
-import Github from "next-auth/providers/github";
-import Google from "next-auth/providers/google"
+import Github from 'next-auth/providers/github';
+import Google from 'next-auth/providers/google';
 
-export const { handlers: { GET, POST }, auth, signIn, signOut } = NextAuth({
+export const {
+  handlers: { GET, POST },
+  auth,
+  signIn,
+  signOut,
+} = NextAuth({
   ...authConfig,
   providers: [
     Github({
@@ -12,7 +17,7 @@ export const { handlers: { GET, POST }, auth, signIn, signOut } = NextAuth({
     }),
     Google({
       clientId: process.env.GOOGLE_CLIENT_ID,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET
-    })
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    }),
   ],
 });

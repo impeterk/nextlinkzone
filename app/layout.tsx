@@ -8,11 +8,12 @@ import { Toaster } from '@/components/ui/sonner';
 
 export const metadata: Metadata = {
   title: 'My Link Zone Connect with world',
-  description: 'Create your one link to connect with the rest of the world. Share your socials, etc...',
+  description:
+    'Create your one link to connect with the rest of the world. Share your socials, etc...',
 };
 
 export default function RootLayout({
-  children
+  children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
@@ -27,7 +28,7 @@ export default function RootLayout({
         >
           <NextTopLoader height={5} color='#10b981' />
           {children}
-        <Toaster />
+          <Toaster />
         </ThemeProvider>
       </body>
     </html>

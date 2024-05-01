@@ -26,7 +26,7 @@ const links = [
 ];
 
 async function handleSignOut() {
-    await signUserOut()
+  await signUserOut();
 }
 
 export default function UserDropDown({ user }: { user: User }) {
@@ -36,7 +36,7 @@ export default function UserDropDown({ user }: { user: User }) {
       <DropdownMenuTrigger asChild>
         <Button variant='outline' className='flex h-fit gap-2'>
           <Avatar>
-            <AvatarImage src={user.image || ''} alt="user avatar"/>
+            <AvatarImage src={user.image || ''} alt='user avatar' />
             <AvatarFallback>{user?.name?.[0]}</AvatarFallback>
           </Avatar>
           <span>{user.name}</span>
@@ -61,11 +61,14 @@ export default function UserDropDown({ user }: { user: User }) {
           );
         })}
         <DropdownMenuSeparator />
-        <DropdownMenuItem className="flex gap-2 items-center border border-destructive" onClick={handleSignOut}>
-            <LuLogOut className='size-5'/>
-            <span className='flex w-full items-center justify-between'>
-              Sign Out
-            </span>
+        <DropdownMenuItem
+          className='flex items-center gap-2 border border-destructive'
+          onClick={handleSignOut}
+        >
+          <LuLogOut className='size-5' />
+          <span className='flex w-full items-center justify-between'>
+            Sign Out
+          </span>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

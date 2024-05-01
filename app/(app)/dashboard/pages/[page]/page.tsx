@@ -6,7 +6,8 @@ import {
 import {
   PageOptions,
   NewLink,
-  ChangeHeaderColor
+  ChangeHeaderColor,
+  ChangeUserImage,
 } from '@/components/dashboard/page/client-components';
 import { DropdownMenuSeparator } from '@/components/ui/dropdown-menu';
 
@@ -21,15 +22,19 @@ export default async function DashboardPage({
 
   return (
     <article className='relative'>
-      <PageHeader pageData={pageData} />
+      <PageHeader pageData={pageData}>
+        <ChangeUserImage userImg={pageData?.image || ''} />
+      </PageHeader>
       {/* <DeletePageForm pagename={params.page} /> */}
-      <div className="absolute top-1 right-1 flex flex-col">
-      <PageOptions />
-      <ChangeHeaderColor currentColor={pageData?.bgColor ?? 'hsl(var(--card))' }/>
+      <div className='absolute right-1 top-1 flex flex-col'>
+        <PageOptions />
+        <ChangeHeaderColor
+          currentColor={pageData?.bgColor ?? 'hsl(var(--card))'}
+        />
       </div>
       <LinkList links={pageData?.links} displayDelete={true} />
-      <div className="my-4">
-      <DropdownMenuSeparator />
+      <div className='my-4'>
+        <DropdownMenuSeparator />
       </div>
       <NewLink />
     </article>
