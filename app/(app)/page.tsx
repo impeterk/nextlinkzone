@@ -21,7 +21,7 @@ export default function Home() {
               className='w-full bg-emerald-500 py-6 text-xl font-semibold dark:bg-emerald-400'
               size='lg'
             >
-              Join for free
+              Get Started
             </Button>
           </Link>
         </div>
