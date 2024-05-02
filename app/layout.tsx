@@ -5,13 +5,29 @@ import './globals.css';
 import { ThemeProvider } from '@/components/theme/theme-provider';
 import NextTopLoader from 'nextjs-toploader';
 import { Toaster } from '@/components/ui/sonner';
+import { SpeedInsights } from '@vercel/speed-insights/next';
+import { Analytics } from '@vercel/analytics/react';
 
+const baseUrl = new URL(
+  process.env.NODE_ENV === 'development'
+    ? (process.env.DEV_URL as string)
+    : (process.env.PRODUCTION_URL as string),
+);
+
+// metadata
 export const metadata: Metadata = {
-  title: 'My Link Zone Connect with world',
+  title: {
+    template: '%s | My Link Zone',
+    default: 'Your One Last link 🔗 | My Link Zone',
+  },
   description:
-    'Create your one link to connect with the rest of the world. Share your socials, etc...',
+    'Elevate your digital identity with Your one link. Unleash creativity, effortlessly share your story. Your connections, your canvas.',
+  metadataBase: baseUrl,
+  openGraph: {
+    url: baseUrl,
+    type: 'website',
+  },
 };
-
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -30,6 +46,8 @@ export default function RootLayout({
           {children}
           <Toaster />
         </ThemeProvider>
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );

@@ -6,6 +6,23 @@ import {
 // import {UserLink} from "@/components/dashboard/page/client-components";
 import { Suspense } from 'react';
 import UserPageSkeleton from '@/components/skeleton/UserPageSkeleton';
+import { Metadata, ResolvingMetadata } from 'next';
+
+ 
+export async function generateMetadata(
+  {
+    params,
+  }: {
+    params: { pageid: string };
+  },
+  parent: ResolvingMetadata
+): Promise<Metadata> {
+  const { pageid } = params;
+  return {
+    title: `@${pageid}`,
+  };
+}
+
 
 export default async function Page({ params }: { params: { pageid: string } }) {
   // const pageData =  (await getUserPage(params.pageid))
