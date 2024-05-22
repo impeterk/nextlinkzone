@@ -21,9 +21,9 @@
 - [x] Auth with nextAuth/Auth.js
 - [x] Connect to Turso
 - [x] Add new page / Delete page
-- [ ] Add link to page / Change Link / Delete Link
-- [ ] Add Icons to Links and preview them for user
-- [ ] Change BG for the header
-- [ ] Connect UploadThing
-- [ ] Change image for the page
-- [ ] Deploy to Vercel
+- [x] Add link to page / Change Link / Delete Link
+- [x] Add Icons to Links and preview them for user
+- [x] Change BG for the header
+- [x] Connect UploadThing
+- [x] Change image for the page
+- [x] Deploy to Vercel
