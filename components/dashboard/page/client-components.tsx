@@ -585,7 +585,7 @@ export function ChangeUserImage({ userImg = '' }: { userImg?: string }) {
         <div className='flex flex-col items-center justify-center gap-8'>
           <div className='relative'>
             <Avatar className=' size-40  border-2 border-primary'>
-              {img && <AvatarImage src={img} alt={`user page avatar`} />}
+              {img && <AvatarImage src={img} alt={`user page avatar`} width={80} height={80}/>}
               <AvatarFallback className='text-5xl capitalize'>
                 {fallback}
               </AvatarFallback>

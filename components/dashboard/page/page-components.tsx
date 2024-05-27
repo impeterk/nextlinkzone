@@ -25,7 +25,7 @@ export async function PageHeader({
         <CardFooter className='mt-auto flex justify-center'>
           <div className='relative'>
             <div className='absolute -left-20 -top-14'>
-              <UserImage image={pageData?.image} fallback={pageData.id} />
+              <UserImage image={pageData?.image} fallback={pageData.id}/>
               {children}
             </div>
           </div>
@@ -79,8 +79,8 @@ function UserImage({
   fallback: string;
 }) {
   return (
-    <Avatar className=' size-40  border-2 border-primary'>
-      {image && <AvatarImage src={image} alt={`user page avatar`} />}
+    <Avatar className='size-40  border-2 border-primary'>
+      {image && <AvatarImage src={image} alt={`user page avatar`} width={160} height={160}/>}
       <AvatarFallback className='text-5xl capitalize'>
         {fallback[0]}
       </AvatarFallback>
