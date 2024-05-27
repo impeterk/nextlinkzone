@@ -43,7 +43,10 @@ async function PageData({ pagename }: { pagename: string }) {
   return (
     <>
       <PageHeader pageData={pageData} />
+      <main className='mt-40'>
+        
       <LinkList links={pageData?.links} />
+      </main>
     </>
   );
 }

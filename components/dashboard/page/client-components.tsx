@@ -53,7 +53,7 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-import { TbLinkPlus } from 'react-icons/tb';
+import { TbBackground, TbLinkPlus, TbTextSize } from 'react-icons/tb';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -65,9 +65,11 @@ import {
 import { toast } from 'sonner';
 import { useDebounce } from '@uidotdev/usehooks';
 import { CiPalette } from 'react-icons/ci';
-import { UploadButton, tailwindColors } from '@/lib/utils';
+import { UploadButton, cn, tailwindColors } from '@/lib/utils';
 import { LuCheck, LuImagePlus } from 'react-icons/lu';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { atom, useAtom } from 'jotai';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 export function UserLink({
   href,
@@ -469,104 +471,20 @@ export function PageOptions() {
   );
 }
 
-export function ChangeHeaderColor({
-  children,
-  currentColor,
-}: {
-  children?: ReactElement;
-  currentColor: string;
-}) {
-  const params = useParams();
-  const [header, setHeader] = useState<HTMLDivElement | null>(null);
-  const [openPalette, setOpenPalette] = useState(false);
-  const [newColor, setNewColor] = useState('');
+const editPage = atom(false);
 
-  const router = useRouter();
-  useEffect(() => {
-    const pageHeader = document.querySelector(
-      `#${params.page}Header`
-    ) as HTMLDivElement;
-    setHeader(pageHeader);
-    return () => {
-      setHeader(null);
-    };
-  }, [params.page]);
+export function ChangeHeaderColor() {
+  const [openPalette, setOpenPalette] = useAtom(editPage);
 
-  function handleColorClick(color: string) {
-    if (!header) return null;
-    header.style.background = color;
-    setNewColor(color);
-  }
-  const setHeaderColorWithPageId = setHeaderColor.bind(
-    null,
-    params.page as string
-  );
-  async function handleSave(color: string | null) {
-    const setNewHeaderColor = setHeaderColorWithPageId.bind(null, color);
-    setOpenPalette(false);
-    toast.promise(setNewHeaderColor(), {
-      loading: 'Saving',
-      success: color
-        ? 'New Color has been set'
-        : 'Color has been Reset to default',
-      error: 'Error',
-    });
-    setNewColor('');
-    router.refresh();
-  }
-
-  function handleCancel() {
-    setOpenPalette(false);
-    setNewColor('');
-    if (!header) return null;
-    header.style.backgroundColor = currentColor;
+  function handleOpenPalette() {
+    setOpenPalette(!openPalette);
   }
 
   return (
     <div className='relative'>
-      <Button
-        variant='ghost'
-        size='icon'
-        onClick={() => {
-          setOpenPalette(!openPalette);
-        }}
-      >
+      <Button variant='ghost' size='icon' onClick={handleOpenPalette}>
         <CiPalette className='size-6' />
-        {children}
       </Button>
-      {openPalette && (
-        <>
-          <div className='absolute -right-1 top-full w-max translate-y-1/2 '>
-            <Card className='scrollbar-hidden grid max-h-40 grid-flow-row grid-cols-11 gap-px overflow-y-scroll border'>
-              {tailwindColors.map((color, index) => (
-                <Button
-                  key={color + index}
-                  size='icon'
-                  variant='ghost'
-                  style={{ background: color }}
-                  onClick={() => handleColorClick(color)}
-                />
-              ))}
-            </Card>
-
-            <Card className='mt-2 flex flex-row items-center justify-end gap-4 px-4 py-2'>
-              <Button
-                variant={'destructive'}
-                className='mr-auto'
-                onClick={() => handleSave(null)}
-              >
-                Reset Color
-              </Button>
-              <Button variant={'secondary'} onClick={() => handleCancel()}>
-                Cancel
-              </Button>
-              <Button variant={'default'} onClick={() => handleSave(newColor)}>
-                Save
-              </Button>
-            </Card>
-          </div>
-        </>
-      )}
     </div>
   );
 }
@@ -631,7 +549,7 @@ export function ChangeUserImage({ userImg = '' }: { userImg?: string }) {
   const [img, setImg] = useState(userImg);
   const [submitting, setSubmitting] = useState(false);
   function handleOpen() {
-    if (open && img !== userImg) setImg(userImg)
+    if (open && img !== userImg) setImg(userImg);
     setOpen(!open);
   }
 
@@ -676,28 +594,31 @@ export function ChangeUserImage({ userImg = '' }: { userImg?: string }) {
               variant='destructive'
               size='icon'
               onClick={() => setImg('')}
-              className='absolute right-0 top-0'
+              className='absolute right-0 top-0 rounded-full'
             >
               <Cross1Icon className='size-6' />
             </Button>
           </div>
-          <UploadButton 
-           endpoint="imageUploader"
-           className="ut-button:bg-accent ut-button:text-accent-foreground"
-           onUploadProgress={() => {setSubmitting(true)}}
-           onClientUploadComplete={(res) => {
-             // Do something with the response
-             setImg(res[0].url)
-             setSubmitting(false)
+          <UploadButton
+            endpoint='imageUploader'
+            className='ut-button:bg-accent ut-button:text-accent-foreground'
+            onUploadProgress={() => {
+              setSubmitting(true);
+            }}
+            onClientUploadComplete={(res) => {
+              // Do something with the response
+              setImg(res[0].url);
+              setSubmitting(false);
             }}
             onUploadError={(error: Error) => {
               // Do something with the error.
-             setSubmitting(false)
+              setSubmitting(false);
 
               alert(`ERROR! ${error.message}`);
-            }} />
+            }}
+          />
         </div>
-        <DialogFooter >
+        <DialogFooter>
           <Button
             variant='outline'
             size='lg'
@@ -716,5 +637,127 @@ export function ChangeUserImage({ userImg = '' }: { userImg?: string }) {
         </DialogFooter>
       </DialogContent>
     </Dialog>
+  );
+}
+
+export function PageMain({
+  children,
+  currentBgColor,
+  currentColor,
+}: {
+  children?: ReactElement;
+  currentBgColor: string;
+  currentColor: string
+}) {
+  const [openEdit, setOpenEdit] = useAtom(editPage);
+
+  const params = useParams();
+  const [newColor, setNewColor] = useState({background: '', color: ''});
+  const [header, setHeader] = useState<HTMLDivElement | null>(null);
+  const router = useRouter();
+  useEffect(() => {
+    const pageHeader = document.querySelector(
+      `#${params.page}Header`
+    ) as HTMLDivElement;
+    setHeader(pageHeader);
+    return () => {
+      setHeader(null);
+    };
+  }, [params.page]);
+
+  function handleColorClick(color: string, position: string) {
+    if (!header) return null;
+    // @ts-ignore
+    header.style[position] = color;
+      setNewColor((prev) => {
+        // @ts-ignore
+        prev[position] = color
+        return prev     
+  })
+
+  }
+  const setHeaderColorWithPageId = setHeaderColor.bind(
+    null,
+    params.page as string
+  );
+  async function handleSave(color: {background: string | null, color: string | null} ) {;
+    setOpenEdit(false);
+    toast.promise(setHeaderColorWithPageId(color), {
+      loading: 'Saving',
+      success: color
+        ? 'New Color has been set'
+        : 'Color has been Reset to default',
+      error: 'Error',
+    });
+    setNewColor({background: '', color: ''});
+    router.refresh();
+  }
+
+  function handleCancel() {
+    setOpenEdit(false);
+    setNewColor({background: '', color: ''});
+    if (!header) return null;
+    header.style.backgroundColor = currentBgColor;
+    header.style.color = currentColor
+  }
+
+  return (
+    <>
+      {openEdit && (
+        <>
+          <Tabs defaultValue='background'>
+            <TabsList className="w-full justify-evenly">
+              <TabsTrigger value='background' className="w-full">
+              <TbBackground />Background</TabsTrigger>
+              <TabsTrigger value='text' className="w-full">
+              <TbTextSize />Text</TabsTrigger>
+            </TabsList>
+            <TabsContent value='background'>
+              <Card className='scrollbar-hidden grid max-h-80 grid-flow-row grid-cols-11 gap-px overflow-y-scroll border'>
+                {tailwindColors.map((color, index) => (
+                  <Button
+                    className={cn('rounded-none transition hover:border', color === currentBgColor ? 'border border-emerald-400' : '')}
+                    key={color + index}
+                    variant='ghost'
+                    style={{ background: color }}
+                    onClick={() => handleColorClick(color, 'background')}
+                  />
+                ))}
+              </Card>
+            </TabsContent>
+            <TabsContent value='text'>
+            <Card className='scrollbar-hidden grid max-h-80 grid-flow-row grid-cols-11 gap-px overflow-y-scroll border'>
+                {tailwindColors.map((color, index) => (
+                  <Button
+                    className={cn('rounded-none transition hover:border', color === currentBgColor ? 'border border-emerald-400' : '')}
+                    key={color + index}
+                    variant='ghost'
+                    style={{ background: color }}
+                    onClick={() => handleColorClick(color, 'color')}
+                  />
+                ))}
+              </Card>
+            </TabsContent>
+            <Card className='mt-4 flex flex-row items-center justify-end gap-4 px-4 py-2'>
+              <Button
+                variant={'destructive'}
+                className='mr-auto'
+                onClick={() => handleSave({background: null, color: null})}
+              >
+                Reset Colors
+              </Button>
+              <Button variant={'secondary'} onClick={() => handleCancel()}>
+                Cancel
+              </Button>
+              <Button variant={'default'} onClick={() => handleSave(newColor)}>
+                Save
+              </Button>
+            </Card>
+          </Tabs>
+        </>
+      )}
+
+      {!openEdit && children}
+    </>
   );
 }

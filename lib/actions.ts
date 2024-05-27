@@ -71,7 +71,6 @@ export async function createNewLink(details: {
   pageId: string;
   icon?: string;
 }) {
-  console.log(details);
   const session = await auth();
   try {
     if (!session?.user?.id) throw new Error('Unauthorized user');
@@ -108,8 +107,9 @@ export async function deleteLink(linkId: number) {
   }
 }
 
-export async function setHeaderColor(pageId: string, newColor: string | null) {
+export async function setHeaderColor(pageId: string, newColor: {background: string | null, color: string | null}) {
   const session = await auth();
+  console.log(pageId, newColor)
   try {
     if (!session?.user?.id) throw new Error('Unauthorized user');
     const page = await db.query.pages.findFirst({
@@ -120,10 +120,10 @@ export async function setHeaderColor(pageId: string, newColor: string | null) {
     });
 
     if (!page) throw new Error('Unauthorized user');
-    if (page.bgColor !== newColor) {
+    if (page.bgColor !== newColor.background && page.color !== newColor.color) {
       return await db
         .update(pages)
-        .set({ bgColor: newColor })
+        .set({ bgColor: newColor.background, color: newColor.color })
         .where(eq(pages.id, pageId))
         .returning();
     }

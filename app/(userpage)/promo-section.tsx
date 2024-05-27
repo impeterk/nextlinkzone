@@ -1,7 +1,6 @@
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import Image from 'next/image';
-import logo from '@/app/icon.png';
 
 export default function PromoSection() {
   return (
@@ -13,9 +12,12 @@ export default function PromoSection() {
           className='flex items-center gap-2 shadow-lg'
         >
           <Image
-            src={logo}
+            src='/logo.webp'
             alt='my link zone logo'
             priority
+            width={48}
+          height={48}
+
             className='size-12 dark:invert'
           />
 

@@ -8,6 +8,7 @@ import {
   NewLink,
   ChangeHeaderColor,
   ChangeUserImage,
+  PageMain,
 } from '@/components/dashboard/page/client-components';
 import { DropdownMenuSeparator } from '@/components/ui/dropdown-menu';
 
@@ -18,7 +19,6 @@ export default async function DashboardPage({
 }) {
   const pageData = await getUserPage(params.page);
   if (!pageData) throw new Error('Page was not found');
-  // console.log(pageData)
 
   return (
     <article className='relative'>
@@ -29,29 +29,23 @@ export default async function DashboardPage({
       <div className='absolute right-1 top-1 flex flex-col'>
         <PageOptions />
         <ChangeHeaderColor
-          currentColor={pageData?.bgColor ?? 'hsl(var(--card))'}
+          
         />
       </div>
-      <LinkList links={pageData?.links} displayDelete={true} />
-      <div className='my-4'>
-        <DropdownMenuSeparator />
-      </div>
-      <NewLink />
+      <main className='mt-40'>
+      <PageMain
+      currentBgColor={pageData?.bgColor ?? 'hsl(var(--card))'}
+      currentColor={pageData?.color ?? 'hsl(var(--card-foreground))'}
+      >
+        <>
+          <LinkList links={pageData?.links} displayDelete={true} />
+          <div className='my-4'>
+            <DropdownMenuSeparator />
+          </div>
+          <NewLink />
+        </>
+      </PageMain>
+      </main>
     </article>
   );
 }
-
-// async function UserPage({ name }: { name: string }) {
-//   // await new Promise((resolve) => setTimeout(resolve, 5000))
-//   unstable_noStore();
-//   const pageData = await getUserPage(name);
-//   if (!pageData) throw new Error('Page was not found');
-//   return (
-//     <>
-//       <PageHeader pageData={pageData} />
-//       {/* <DeletePageForm pagename={name} /> */}
-//       <LinkList links={pageData?.links} />
-//       <NewLink />
-//     </>
-//   );
-// }

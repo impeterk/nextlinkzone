@@ -17,7 +17,7 @@ export async function PageHeader({
       <Card
         className='flex h-fit min-h-60 flex-col justify-center shadow'
         id={`${pageData.id}Header`}
-        style={{ backgroundColor: pageData.bgColor ?? 'hsl(var(--card))' }}
+        style={{ backgroundColor: pageData.bgColor ?? 'hsl(var(--card))', color: pageData.color ?? 'hsl(var(--card-foreground))' }}
       >
         <CardContent className='mt-auto text-center text-3xl'>
           {pageData.id}
@@ -43,7 +43,7 @@ export function LinkList({
   displayDelete?: boolean;
 }) {
   return (
-    <main className='mt-40'>
+    
       <ul className='space-y-4'>
         {Boolean(links.length) &&
           links.map((link: any) => (
@@ -68,7 +68,6 @@ export function LinkList({
           </>
         )}
       </ul>
-    </main>
   );
 }
 
