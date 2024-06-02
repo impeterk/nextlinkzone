@@ -107,8 +107,10 @@ export function LinkDelete({ linkId }: { linkId: number }) {
   const router = useRouter();
   const deleteLinkWithId = deleteLink.bind(null, linkId);
   const [submitting, setSubmitting] = useState(false);
+  const [open, setOpen] = useState(false)
   async function handleDelete(e: FormEvent) {
     e.preventDefault();
+    setOpen(!open)
     setSubmitting(!submitting);
     // await deleteLinkWithId()
     toast.promise(deleteLinkWithId(), {
@@ -121,16 +123,37 @@ export function LinkDelete({ linkId }: { linkId: number }) {
   }
 
   return (
-    <form onSubmit={handleDelete} className='absolute right-0 top-px pr-px'>
-      <Button
-        variant='ghost'
+    
+    <Dialog open={open} onOpenChange={setOpen} >
+    <DialogTrigger asChild>
+    <Button
+        variant='destructive'
         size='icon'
-        className='size-12 hover:text-destructive'
+        className='size-5 rounded-full group hover:size-6 transition-all absolute right-0 top-0 translate-x-1/2 -translate-y-1/2'
         disabled={submitting}
       >
-        <Cross1Icon className='size-6' />
+        <Cross1Icon className='size-3 group-hover:size-4' />
       </Button>
-    </form>
+    </DialogTrigger>
+    <DialogContent className='sm:max-w-[425px]'>
+    <form onSubmit={handleDelete}>
+        <DialogHeader>
+          <DialogTitle>Are you absolutely sure?</DialogTitle>
+          <DialogDescription>This action cannot be undone. This will permanently delete selected link</DialogDescription>
+        </DialogHeader>
+        <DialogFooter>
+          <DialogClose asChild>
+            <Button type='button' variant='outline'>
+              Close
+            </Button>
+          </DialogClose>
+          <Button type="submit" variant="destructive">
+            <TrashIcon className="size-5 mr-2" /> Delete
+          </Button>
+        </DialogFooter>
+      </form>
+    </DialogContent>
+  </Dialog>
   );
 }
 
