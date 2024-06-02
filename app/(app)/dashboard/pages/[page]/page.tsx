@@ -1,4 +1,4 @@
-import { getUserPage } from '@/lib/data';
+import { getUserPageWithLinks } from '@/lib/data';
 import {
   LinkList,
   PageHeader,
@@ -17,7 +17,7 @@ export default async function DashboardPage({
 }: {
   params: { page: string };
 }) {
-  const pageData = await getUserPage(params.page);
+  const pageData = await getUserPageWithLinks(params.page);
   if (!pageData) throw new Error('Page was not found');
 
   return (

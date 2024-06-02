@@ -81,7 +81,7 @@ export function UserLink({
   icon: string | null;
 }) {
   return (
-    <a
+    <Link
       href={href}
       target='_blank'
       rel='noopener noreferrer'
@@ -99,7 +99,7 @@ export function UserLink({
         )}
         {name}
       </Button>
-    </a>
+    </Link>
   );
 }
 
@@ -285,7 +285,6 @@ export function NewLink() {
   }
 
   // const {error, data} = useFetch(`https://api.iconify.design/search?query=${debouncedSearchIcon}`)
-
   useEffect(() => {
     async function getIcons() {
       const res = await fetch(

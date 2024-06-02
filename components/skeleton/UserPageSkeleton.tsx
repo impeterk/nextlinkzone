@@ -24,19 +24,19 @@ export function LinkListSkeleton() {
   return (
     <ul className='mt-32 w-full space-y-4 '>
       <li>
-        <Skeleton className='h-16 w-full' />
+        <Skeleton className='h-12 w-full' />
       </li>
       <li>
-        <Skeleton className='h-16 w-full' />
+        <Skeleton className='h-12 w-full' />
       </li>
       <li>
-        <Skeleton className='h-16 w-full' />
+        <Skeleton className='h-12 w-full' />
       </li>
       <li>
-        <Skeleton className='h-16 w-full' />
+        <Skeleton className='h-12 w-full' />
       </li>
       <li>
-        <Skeleton className='h-16 w-full' />
+        <Skeleton className='h-12 w-full' />
       </li>
     </ul>
   );

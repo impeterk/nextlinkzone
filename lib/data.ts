@@ -1,6 +1,6 @@
 import { desc, eq } from 'drizzle-orm';
 import { db } from './db';
-import { pages } from './db/schema';
+import { links, pages } from './db/schema';
 import { unstable_noStore } from 'next/cache';
 
 export async function getUserPages(userId: string) {
@@ -11,7 +11,7 @@ export async function getUserPages(userId: string) {
   });
 }
 
-export async function getUserPage(pagename: string) {
+export async function getUserPageWithLinks(pagename: string) {
   unstable_noStore();
   return await db.query.pages.findFirst({
     where: eq(pages.id, pagename),
@@ -19,4 +19,19 @@ export async function getUserPage(pagename: string) {
       links: true,
     },
   });
+}
+
+export async function getUserPage(pageId: string) {
+  unstable_noStore();
+  return await db.query.pages.findFirst({
+    where: eq(pages.id, pageId)
+  });
+}
+
+export async function getPageLinks(pageId: string) {
+  // await new Promise(resolve => setTimeout(resolve, 3500))
+  unstable_noStore();
+  return await db.query.links.findMany({
+    where: eq(links.pageId, pageId)
+  })
 }
