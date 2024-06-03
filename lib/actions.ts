@@ -107,9 +107,12 @@ export async function deleteLink(linkId: number) {
   }
 }
 
-export async function setHeaderColor(pageId: string, newColor: {background: string | null, color: string | null}) {
+export async function setHeaderColor(
+  pageId: string,
+  newColor: { background: string | null; color: string | null }
+) {
   const session = await auth();
-  console.log(pageId, newColor)
+  console.log(pageId, newColor);
   try {
     if (!session?.user?.id) throw new Error('Unauthorized user');
     const page = await db.query.pages.findFirst({

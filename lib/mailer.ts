@@ -1,28 +1,28 @@
-import nodemailer from "nodemailer";
+import nodemailer from 'nodemailer';
 
 const transporter = nodemailer.createTransport({
-  host: "smtp-relay.brevo.com",
+  host: 'smtp-relay.brevo.com',
   port: 587,
   auth: {
     user: process.env.BREVO_USER,
-    pass: process.env.BREVO_KEY
-  }
-})
+    pass: process.env.BREVO_KEY,
+  },
+});
 
 type Mail = {
-    name: string,
-    email: string,
-    message: string
-}
+  name: string;
+  email: string;
+  message: string;
+};
 
 export async function mailer(mail: Mail) {
   const info = await transporter.sendMail({
     from: `${mail.name} <${mail.email}>`,
     to: 'peterkudelas@skiff.com',
     subject: 'Contacted from website',
-    html: `${mail.message}`
-  })
+    html: `${mail.message}`,
+  });
 
-  console.log("message sent:" + info.messageId)
-  return info.messageId
+  console.log('message sent:' + info.messageId);
+  return info.messageId;
 }

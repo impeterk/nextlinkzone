@@ -11,7 +11,7 @@ import { Analytics } from '@vercel/analytics/react';
 const baseUrl = new URL(
   process.env.NODE_ENV === 'development'
     ? (process.env.DEV_URL as string)
-    : (process.env.PRODUCTION_URL as string),
+    : (process.env.PRODUCTION_URL as string)
 );
 
 // metadata

@@ -69,7 +69,7 @@ export const pages = sqliteTable('pages', {
     .default(sql`CURRENT_TIMESTAMP`),
   image: text('image'),
   bgColor: text('bg_color'),
-  color: text('color')
+  color: text('color'),
 });
 
 export const links = sqliteTable('links', {

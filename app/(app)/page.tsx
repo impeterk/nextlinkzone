@@ -5,7 +5,5 @@ import { WorldGlobe } from './_components/world-globe';
 // export const dynamic = 'force-static'
 
 export default function Home() {
-  return (
-      <WorldGlobe />
-  );
+  return <WorldGlobe />;
 }

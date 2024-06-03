@@ -2,7 +2,13 @@
 import { Button } from '@/components/ui/button';
 import { Icon } from '@iconify-icon/react';
 import { useParams, usePathname, useRouter } from 'next/navigation';
-import { Card, CardHeader, CardTitle } from '../../ui/card';
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '../../ui/card';
 import Link from 'next/link';
 import clsx from 'clsx';
 import {
@@ -68,8 +74,11 @@ import { CiPalette } from 'react-icons/ci';
 import { UploadButton, cn, tailwindColors } from '@/lib/utils';
 import { LuCheck, LuImagePlus } from 'react-icons/lu';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { atom, useAtom } from 'jotai';
+import { atom, useAtom, useSetAtom } from 'jotai';
+import { atomWithReset, useResetAtom } from 'jotai/utils';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { UserImage } from './page-components';
+import useFetch from 'use-http';
 
 export function UserLink({
   href,
@@ -107,10 +116,10 @@ export function LinkDelete({ linkId }: { linkId: number }) {
   const router = useRouter();
   const deleteLinkWithId = deleteLink.bind(null, linkId);
   const [submitting, setSubmitting] = useState(false);
-  const [open, setOpen] = useState(false)
+  const [open, setOpen] = useState(false);
   async function handleDelete(e: FormEvent) {
     e.preventDefault();
-    setOpen(!open)
+    setOpen(!open);
     setSubmitting(!submitting);
     // await deleteLinkWithId()
     toast.promise(deleteLinkWithId(), {
@@ -123,37 +132,39 @@ export function LinkDelete({ linkId }: { linkId: number }) {
   }
 
   return (
-    
-    <Dialog open={open} onOpenChange={setOpen} >
-    <DialogTrigger asChild>
-    <Button
-        variant='destructive'
-        size='icon'
-        className='size-5 rounded-full group hover:size-6 transition-all absolute right-0 top-0 translate-x-1/2 -translate-y-1/2'
-        disabled={submitting}
-      >
-        <Cross1Icon className='size-3 group-hover:size-4' />
-      </Button>
-    </DialogTrigger>
-    <DialogContent className='sm:max-w-[425px]'>
-    <form onSubmit={handleDelete}>
-        <DialogHeader>
-          <DialogTitle>Are you absolutely sure?</DialogTitle>
-          <DialogDescription>This action cannot be undone. This will permanently delete selected link</DialogDescription>
-        </DialogHeader>
-        <DialogFooter>
-          <DialogClose asChild>
-            <Button type='button' variant='outline'>
-              Close
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild>
+        <Button
+          variant='destructive'
+          size='icon'
+          className='group absolute right-0 top-0 size-5 -translate-y-1/2 translate-x-1/2 rounded-full transition-all hover:size-6'
+          disabled={submitting}
+        >
+          <Cross1Icon className='size-3 group-hover:size-4' />
+        </Button>
+      </DialogTrigger>
+      <DialogContent className='sm:max-w-[425px]'>
+        <form onSubmit={handleDelete}>
+          <DialogHeader>
+            <DialogTitle>Are you absolutely sure?</DialogTitle>
+            <DialogDescription>
+              This action cannot be undone. This will permanently delete
+              selected link
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <DialogClose asChild>
+              <Button type='button' variant='outline'>
+                Close
+              </Button>
+            </DialogClose>
+            <Button type='submit' variant='destructive'>
+              <TrashIcon className='mr-2 size-5' /> Delete
             </Button>
-          </DialogClose>
-          <Button type="submit" variant="destructive">
-            <TrashIcon className="size-5 mr-2" /> Delete
-          </Button>
-        </DialogFooter>
-      </form>
-    </DialogContent>
-  </Dialog>
+          </DialogFooter>
+        </form>
+      </DialogContent>
+    </Dialog>
   );
 }
 
@@ -307,16 +318,15 @@ export function NewLink() {
     setSearchIcon(term);
   }
 
-  // const {error, data} = useFetch(`https://api.iconify.design/search?query=${debouncedSearchIcon}`)
+  const { get, data } = useFetch(`https://api.iconify.design`, {
+    cacheLife: 1000 * 60 * 60 * 24 * 30,
+  });
+  async function getIcons() {
+    const { icons } = await get(`/search?query=${debouncedSearchIcon}`);
+    if (icons.length > 0 && !openList) setOpenList(true);
+    setIconsList(icons);
+  }
   useEffect(() => {
-    async function getIcons() {
-      const res = await fetch(
-        `https://api.iconify.design/search?query=${debouncedSearchIcon}`
-      );
-      const { icons } = await res.json();
-      if (icons.length > 0 && !openList) setOpenList(true);
-      setIconsList(icons);
-    }
     if (debouncedSearchIcon) {
       getIcons();
     }
@@ -475,9 +485,12 @@ export function PageOptions() {
               </ChangeHeaderColor>
             </>
           </DropdownMenuItem> */}
+          <DropdownMenuItem>
+            <ChangeHeaderColor />
+          </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DialogTrigger asChild>
-            <DropdownMenuItem asChild>
+            <DropdownMenuItem>
               <Button
                 variant='destructive'
                 className='flex w-full items-center gap-2'
@@ -503,11 +516,10 @@ export function ChangeHeaderColor() {
   }
 
   return (
-    <div className='relative'>
-      <Button variant='ghost' size='icon' onClick={handleOpenPalette}>
-        <CiPalette className='size-6' />
-      </Button>
-    </div>
+    <Button variant='default' onClick={handleOpenPalette}>
+      <CiPalette className='mr-2 size-6' />
+      Customize
+    </Button>
   );
 }
 
@@ -607,7 +619,14 @@ export function ChangeUserImage({ userImg = '' }: { userImg?: string }) {
         <div className='flex flex-col items-center justify-center gap-8'>
           <div className='relative'>
             <Avatar className=' size-40  border-2 border-primary'>
-              {img && <AvatarImage src={img} alt={`user page avatar`} width={80} height={80}/>}
+              {img && (
+                <AvatarImage
+                  src={img}
+                  alt={`user page avatar`}
+                  width={80}
+                  height={80}
+                />
+              )}
               <AvatarFallback className='text-5xl capitalize'>
                 {fallback}
               </AvatarFallback>
@@ -662,6 +681,9 @@ export function ChangeUserImage({ userImg = '' }: { userImg?: string }) {
   );
 }
 
+const pageBackground = atom('hsl(var(--card))');
+const pageColor = atom('var(--tw-prose-headings');
+
 export function PageMain({
   children,
   currentBgColor,
@@ -669,58 +691,48 @@ export function PageMain({
 }: {
   children?: ReactElement;
   currentBgColor: string;
-  currentColor: string
+  currentColor: string;
 }) {
   const [openEdit, setOpenEdit] = useAtom(editPage);
+  const [backgroundAtom, setBackgroundAtom] = useAtom(pageBackground);
+  const [colorAtom, setColorAtom] = useAtom(pageColor);
 
   const params = useParams();
-  const [newColor, setNewColor] = useState({background: '', color: ''});
-  const [header, setHeader] = useState<HTMLDivElement | null>(null);
   const router = useRouter();
+
   useEffect(() => {
-    const pageHeader = document.querySelector(
-      `#${params.page}Header`
-    ) as HTMLDivElement;
-    setHeader(pageHeader);
     return () => {
-      setHeader(null);
+      setOpenEdit(false);
     };
   }, [params.page]);
-
-  function handleColorClick(color: string, position: string) {
-    if (!header) return null;
-    // @ts-ignore
-    header.style[position] = color;
-      setNewColor((prev) => {
-        // @ts-ignore
-        prev[position] = color
-        return prev     
-  })
-
+  function handleReset() {
+    handleSave({ background: null, color: null }, false);
   }
+
   const setHeaderColorWithPageId = setHeaderColor.bind(
     null,
     params.page as string
   );
-  async function handleSave(color: {background: string | null, color: string | null} ) {;
+  async function handleSave(
+    color: { background: string | null; color: string | null },
+    set = true
+  ) {
+    console.log(Object.keys(color));
     setOpenEdit(false);
     toast.promise(setHeaderColorWithPageId(color), {
       loading: 'Saving',
-      success: color
-        ? 'New Color has been set'
-        : 'Color has been Reset to default',
+      success: set
+        ? 'New Colors have been set'
+        : 'Colors has been Reset to default',
       error: 'Error',
     });
-    setNewColor({background: '', color: ''});
     router.refresh();
   }
 
   function handleCancel() {
     setOpenEdit(false);
-    setNewColor({background: '', color: ''});
-    if (!header) return null;
-    header.style.backgroundColor = currentBgColor;
-    header.style.color = currentColor
+    setBackgroundAtom(currentBgColor);
+    setColorAtom(currentColor);
   }
 
   return (
@@ -728,34 +740,48 @@ export function PageMain({
       {openEdit && (
         <>
           <Tabs defaultValue='background'>
-            <TabsList className="w-full justify-evenly">
-              <TabsTrigger value='background' className="w-full">
-              <TbBackground />Background</TabsTrigger>
-              <TabsTrigger value='text' className="w-full">
-              <TbTextSize />Text</TabsTrigger>
+            <TabsList className='w-full justify-evenly'>
+              <TabsTrigger value='background' className='w-full'>
+                <TbBackground />
+                Background
+              </TabsTrigger>
+              <TabsTrigger value='text' className='w-full'>
+                <TbTextSize />
+                Text
+              </TabsTrigger>
             </TabsList>
             <TabsContent value='background'>
               <Card className='scrollbar-hidden grid max-h-80 grid-flow-row grid-cols-11 gap-px overflow-y-scroll border'>
                 {tailwindColors.map((color, index) => (
                   <Button
-                    className={cn('rounded-none transition hover:border', color === currentBgColor ? 'border border-emerald-400' : '')}
+                    className={cn(
+                      'rounded-none transition hover:border',
+                      color === backgroundAtom
+                        ? 'border border-emerald-400'
+                        : ''
+                    )}
                     key={color + index}
                     variant='ghost'
                     style={{ background: color }}
-                    onClick={() => handleColorClick(color, 'background')}
+                    onClick={() => setBackgroundAtom(color)}
                   />
                 ))}
               </Card>
             </TabsContent>
             <TabsContent value='text'>
-            <Card className='scrollbar-hidden grid max-h-80 grid-flow-row grid-cols-11 gap-px overflow-y-scroll border'>
+              <Card className='scrollbar-hidden grid max-h-80 grid-flow-row grid-cols-11 gap-px overflow-y-scroll border'>
                 {tailwindColors.map((color, index) => (
                   <Button
-                    className={cn('rounded-none transition hover:border', color === currentBgColor ? 'border border-emerald-400' : '')}
+                    className={cn(
+                      'rounded-none transition hover:border',
+                      color === colorAtom ? 'border border-emerald-400' : ''
+                    )}
                     key={color + index}
                     variant='ghost'
                     style={{ background: color }}
-                    onClick={() => handleColorClick(color, 'color')}
+                    onClick={() => {
+                      setColorAtom(color);
+                    }}
                   />
                 ))}
               </Card>
@@ -764,14 +790,19 @@ export function PageMain({
               <Button
                 variant={'destructive'}
                 className='mr-auto'
-                onClick={() => handleSave({background: null, color: null})}
+                onClick={() => handleReset()}
               >
                 Reset Colors
               </Button>
               <Button variant={'secondary'} onClick={() => handleCancel()}>
                 Cancel
               </Button>
-              <Button variant={'default'} onClick={() => handleSave(newColor)}>
+              <Button
+                variant={'default'}
+                onClick={() =>
+                  handleSave({ background: backgroundAtom, color: colorAtom })
+                }
+              >
                 Save
               </Button>
             </Card>
@@ -781,5 +812,61 @@ export function PageMain({
 
       {!openEdit && children}
     </>
+  );
+}
+
+interface PageData {
+  id: string;
+  color: string | null;
+  image: string | null;
+  bgColor: string | null;
+  userId: string;
+  createdAt: string;
+}
+
+export function ClientPageHeader({
+  children,
+  pageData,
+  avatar,
+}: {
+  children?: ReactElement;
+  avatar?: ReactElement;
+  pageData: PageData;
+}) {
+  const [background, setBackground] = useAtom(pageBackground);
+  const [color, setColor] = useAtom(pageColor);
+
+  useEffect(() => {
+    pageData.bgColor
+      ? setBackground(pageData.bgColor)
+      : setBackground('hsl(var(--card))');
+    pageData.color
+      ? setColor(pageData.color)
+      : setColor('var(--tw-prose-headings');
+  }, [pageData]);
+
+  return (
+    <header>
+      <Card
+        className='flex h-fit min-h-60 flex-col items-center justify-center shadow'
+        style={{
+          backgroundColor: background,
+        }}
+      >
+        <CardContent className='prose mt-auto text-center dark:prose-invert'>
+          <h1 className='mx-auto' style={{ color }}>
+            {pageData.id}
+          </h1>
+        </CardContent>
+        <CardFooter className='mt-auto flex justify-center'>
+          <div className='relative'>
+            <div className='absolute -left-20 -top-14'>
+              {avatar}
+              {children}
+            </div>
+          </div>
+        </CardFooter>
+      </Card>
+    </header>
   );
 }

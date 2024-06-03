@@ -24,7 +24,7 @@ export async function getUserPageWithLinks(pagename: string) {
 export async function getUserPage(pageId: string) {
   unstable_noStore();
   return await db.query.pages.findFirst({
-    where: eq(pages.id, pageId)
+    where: eq(pages.id, pageId),
   });
 }
 
@@ -32,6 +32,6 @@ export async function getPageLinks(pageId: string) {
   // await new Promise(resolve => setTimeout(resolve, 3500))
   unstable_noStore();
   return await db.query.links.findMany({
-    where: eq(links.pageId, pageId)
-  })
+    where: eq(links.pageId, pageId),
+  });
 }

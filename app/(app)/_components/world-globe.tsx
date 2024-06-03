@@ -2,7 +2,7 @@
 import React from 'react';
 import dynamic from 'next/dynamic';
 import { useTheme } from 'next-themes';
-import { motion } from "framer-motion";
+import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 
@@ -402,8 +402,8 @@ export function WorldGlobe() {
   ];
 
   return (
-    <div className="flex flex-row items-center justify-center py-10 h-screen md:h-full relative w-full">
-      <div className="max-w-7xl mx-auto w-full relative overflow-hidden h-full px-4">
+    <div className='relative flex h-screen w-full flex-row items-center justify-center py-10 md:h-full'>
+      <div className='relative mx-auto h-full w-full max-w-7xl overflow-hidden px-4'>
         <motion.div
           initial={{
             opacity: 0,
@@ -416,28 +416,28 @@ export function WorldGlobe() {
           transition={{
             duration: 1,
           }}
-          className="div z-50 relative"
+          className='div relative z-50'
         >
-          <div className='prose text-pretty dark:prose-invert md:prose-xl mx-auto z-[1000]'>
-          <h1>
-            Your <strong>ONE</strong> link to share with rest of the world
-          </h1>
-          <p>
-            One link to help you share everything you create, curate and sell
-            from all your social media profiles.
-          </p>
-          <Link href='/signin'>
-            <Button
-              className='w-full bg-emerald-500 py-6 text-xl font-semibold dark:bg-emerald-400'
-              size='lg'
-            >
-              Get Started
-            </Button>
-          </Link>
-        </div>
+          <div className='prose z-[1000] mx-auto text-pretty dark:prose-invert md:prose-xl'>
+            <h1>
+              Your <strong>ONE</strong> link to share with rest of the world
+            </h1>
+            <p>
+              One link to help you share everything you create, curate and sell
+              from all your social media profiles.
+            </p>
+            <Link href='/signin'>
+              <Button
+                className='w-full bg-emerald-500 py-6 text-xl font-semibold dark:bg-emerald-400'
+                size='lg'
+              >
+                Get Started
+              </Button>
+            </Link>
+          </div>
         </motion.div>
-        <div className="absolute w-full bottom-0 inset-x-0 h-40 pointer-events-none select-none" />
-        <div className="absolute w-full -bottom-32 h-72 md:h-full ">
+        <div className='pointer-events-none absolute inset-x-0 bottom-0 h-40 w-full select-none' />
+        <div className='absolute -bottom-32 h-72 w-full md:h-full '>
           <World data={sampleArcs} globeConfig={globeConfig} />
         </div>
       </div>

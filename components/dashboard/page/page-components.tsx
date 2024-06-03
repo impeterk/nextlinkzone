@@ -15,17 +15,23 @@ export async function PageHeader({
   return (
     <header>
       <Card
-        className='flex h-fit min-h-60 flex-col justify-center shadow'
-        id={`${pageData.id}Header`}
-        style={{ backgroundColor: pageData.bgColor ?? 'hsl(var(--card))', color: pageData.color ?? 'hsl(var(--card-foreground))' }}
+        className='flex h-fit min-h-60 flex-col items-center justify-center shadow'
+        style={{
+          backgroundColor: pageData.bgColor ?? 'hsl(var(--card))',
+        }}
       >
-        <CardContent className='mt-auto text-center text-3xl'>
-          {pageData.id}
+        <CardContent className='prose mt-auto text-center dark:prose-invert'>
+          <h1
+            className='mx-auto'
+            style={{ color: pageData.color ?? 'var(--tw-prose-headings' }}
+          >
+            {pageData.id}
+          </h1>
         </CardContent>
         <CardFooter className='mt-auto flex justify-center'>
           <div className='relative'>
             <div className='absolute -left-20 -top-14'>
-              <UserImage image={pageData?.image} fallback={pageData.id}/>
+              <UserImage image={pageData?.image} fallback={pageData.id} />
               {children}
             </div>
           </div>
@@ -43,35 +49,34 @@ export function LinkList({
   displayDelete?: boolean;
 }) {
   return (
-    
-      <ul className='space-y-4'>
-        {Boolean(links.length) &&
-          links.map((link: any) => (
-            <li key={link.id} className='relative'>
-              <UserLink href={link.href} icon={link?.icon} name={link.name} />
-              {displayDelete && (
-                <>
-                  <LinkDelete linkId={link.id} />
-                </>
-              )}
-            </li>
-          ))}
-        {!Boolean(links.length) && (
-          <>
-            <div className='flex h-full w-full items-center justify-center'>
-              <span className='prose'>
-                <h3 className='text-muted-foreground dark:text-muted'>
-                  No Links Created Yet
-                </h3>
-              </span>
-            </div>
-          </>
-        )}
-      </ul>
+    <ul className='space-y-4'>
+      {Boolean(links.length) &&
+        links.map((link: any) => (
+          <li key={link.id} className='relative'>
+            <UserLink href={link.href} icon={link?.icon} name={link.name} />
+            {displayDelete && (
+              <>
+                <LinkDelete linkId={link.id} />
+              </>
+            )}
+          </li>
+        ))}
+      {!Boolean(links.length) && (
+        <>
+          <div className='flex h-full w-full items-center justify-center'>
+            <span className='prose'>
+              <h3 className='text-muted-foreground dark:text-muted'>
+                No Links Created Yet
+              </h3>
+            </span>
+          </div>
+        </>
+      )}
+    </ul>
   );
 }
 
-function UserImage({
+export function UserImage({
   image,
   fallback,
 }: {
@@ -80,7 +85,14 @@ function UserImage({
 }) {
   return (
     <Avatar className='size-40  border-2 border-primary'>
-      {image && <AvatarImage src={image} alt={`user page avatar`} width={160} height={160}/>}
+      {image && (
+        <AvatarImage
+          src={image}
+          alt={`user page avatar`}
+          width={160}
+          height={160}
+        />
+      )}
       <AvatarFallback className='text-5xl capitalize'>
         {fallback[0]}
       </AvatarFallback>

@@ -3,12 +3,12 @@ import {
   LinkList,
   PageHeader,
 } from '@/components/dashboard/page/page-components';
-// import {UserLink} from "@/components/dashboard/page/client-components";
 import { Suspense } from 'react';
-import { HeaderSkeleton, LinkListSkeleton } from '@/components/skeleton/UserPageSkeleton';
+import {
+  HeaderSkeleton,
+  LinkListSkeleton,
+} from '@/components/skeleton/UserPageSkeleton';
 import { Metadata, ResolvingMetadata } from 'next';
-
- 
 export async function generateMetadata(
   {
     params,
@@ -23,7 +23,6 @@ export async function generateMetadata(
   };
 }
 
-
 export default async function Page({ params }: { params: { pageid: string } }) {
   // const pageData =  (await getUserPage(params.pageid))
   // if (!pageData) return null
@@ -33,31 +32,30 @@ export default async function Page({ params }: { params: { pageid: string } }) {
         <Header pagename={params.pageid} />
       </Suspense>
       <main className='mt-40'>
-      <Suspense fallback={<LinkListSkeleton />}>
-        <Links pagename={params.pageid} />
-      </Suspense>
+        <Suspense fallback={<LinkListSkeleton />}>
+          <Links pagename={params.pageid} />
+        </Suspense>
       </main>
     </article>
   );
 }
 
-async function Header({pagename}: {pagename: string}) {
+async function Header({ pagename }: { pagename: string }) {
   const headerData = await getUserPage(pagename);
-  if (!headerData) return null
+  if (!headerData) return null;
   return (
     <>
       <PageHeader pageData={headerData} />
-    
     </>
-  )
+  );
 }
 
-async function Links({pagename}: {pagename: string}) {
-  const linksData = await getPageLinks(pagename)
-  if (!linksData) return null
+async function Links({ pagename }: { pagename: string }) {
+  const linksData = await getPageLinks(pagename);
+  if (!linksData) return null;
   return (
     <>
-        <LinkList links={linksData} />
+      <LinkList links={linksData} />
     </>
-  )
+  );
 }

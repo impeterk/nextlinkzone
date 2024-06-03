@@ -16,8 +16,7 @@ export default function PromoSection() {
             alt='my link zone logo'
             priority
             width={48}
-          height={48}
-
+            height={48}
             className='size-12 dark:invert'
           />
 
