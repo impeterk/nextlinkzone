@@ -74,11 +74,21 @@ import { CiPalette } from 'react-icons/ci';
 import { UploadButton, cn, tailwindColors } from '@/lib/utils';
 import { LuCheck, LuImagePlus } from 'react-icons/lu';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { atom, useAtom, useSetAtom } from 'jotai';
-import { atomWithReset, useResetAtom } from 'jotai/utils';
+import { atom, useAtom} from 'jotai';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { UserImage } from './page-components';
 import useFetch from 'use-http';
+import { LuMoreVertical } from 'react-icons/lu';
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet"
+import { Logo } from '@/components/buttons';
+import { UserPages } from './page-components';
+
 
 export function UserLink({
   href,
@@ -111,6 +121,37 @@ export function UserLink({
     </Link>
   );
 }
+
+export function ClientUserLink({
+  href,
+  name,
+  icon,
+}: {
+  href: string;
+  name: string;
+  icon: string | null;
+}) {
+  return (
+      <Button
+        variant={'outline'}
+        className='flex w-full flex-col items-center justify-center p-8 text-xl'
+        size={'lg'}
+      >
+        <span className='flex items-center gap-2'>
+        {icon && (
+          <>
+            <Icon icon={icon} className='text-3xl' />
+          </>
+        )}
+        {name}
+        </span>
+        <small className="text-muted-foreground text-xs">
+          {href}
+          </small>
+      </Button>
+  );
+}
+
 
 export function LinkDelete({ linkId }: { linkId: number }) {
   const router = useRouter();
@@ -168,10 +209,17 @@ export function LinkDelete({ linkId }: { linkId: number }) {
   );
 }
 
+const sidebarOpen = atom(false)
+
 export function PageCard({ name }: { name: string }) {
+  const [sheetOpen, setSheetOpen] = useAtom(sidebarOpen)
   const pathname = usePathname();
   return (
-    <Link href={`/dashboard/pages/${name}`}>
+    <Link href={`/dashboard/pages/${name}`} onClick={() => {
+      if (sheetOpen) {
+        setSheetOpen(!sheetOpen)
+      }
+    }}>
       <Card
         className={clsx(
           'group  relative flex min-h-32 items-center justify-center opacity-50 hover:opacity-100',
@@ -192,6 +240,7 @@ export function PageCard({ name }: { name: string }) {
 export function NewPage() {
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState('');
+  const [mobileSideBar, setMobileSideBar] = useAtom(sidebarOpen)
   const router = useRouter();
 
   async function handleSubmit(formData: FormData) {
@@ -200,6 +249,7 @@ export function NewPage() {
     if (res?.success) {
       router.push(`/dashboard/pages/${res.pagename}`);
       setOpen(false);
+      if (mobileSideBar) setMobileSideBar(!mobileSideBar)
     }
   }
 
@@ -659,7 +709,7 @@ export function ChangeUserImage({ userImg = '' }: { userImg?: string }) {
             }}
           />
         </div>
-        <DialogFooter>
+        <DialogFooter className='max-sm:gap-6'>
           <Button
             variant='outline'
             size='lg'
@@ -670,7 +720,7 @@ export function ChangeUserImage({ userImg = '' }: { userImg?: string }) {
             Close
           </Button>
           <form action={handleSave}>
-            <Button size='lg' disabled={submitting}>
+            <Button size='lg' className="w-full" variant="default" disabled={submitting}>
               <LuCheck className='mr-2 size-5' />
               Save
             </Button>
@@ -869,4 +919,27 @@ export function ClientPageHeader({
       </Card>
     </header>
   );
+}
+export function MobileSideBar({children}: {children: ReactElement}) {
+  const [open, setOpen] = useAtom(sidebarOpen)
+  function handleOpen() {
+    setOpen(!open)
+  }
+  return (
+    <Sheet open={open} onOpenChange={handleOpen}>
+  <SheetTrigger asChild><Button variant={'ghost'} size="icon">
+  <DotsVerticalIcon className='size-5'/>
+  </Button></SheetTrigger>
+  <SheetContent side={'left'}>
+    <SheetHeader>
+      <SheetTitle>
+      <Logo href="/dashboard/pages" />
+      </SheetTitle>
+      <SheetDescription>
+      </SheetDescription>
+    </SheetHeader>
+    {children}
+  </SheetContent>
+</Sheet>
+  )
 }

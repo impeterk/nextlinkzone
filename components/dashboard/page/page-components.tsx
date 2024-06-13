@@ -2,7 +2,7 @@ import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { getUserPages } from '@/lib/data';
 import { auth } from '@/auth';
-import { LinkDelete, PageCard, UserLink } from './client-components';
+import { LinkDelete, PageCard, UserLink,ClientUserLink } from './client-components';
 import { ReactElement } from 'react';
 
 export async function PageHeader({
@@ -54,6 +54,41 @@ export function LinkList({
         links.map((link: any) => (
           <li key={link.id} className='relative'>
             <UserLink href={link.href} icon={link?.icon} name={link.name} />
+            {displayDelete && (
+              <>
+                <LinkDelete linkId={link.id} />
+              </>
+            )}
+          </li>
+        ))}
+      {!Boolean(links.length) && (
+        <>
+          <div className='flex h-full w-full items-center justify-center'>
+            <span className='prose'>
+              <h3 className='text-muted-foreground dark:text-muted'>
+                No Links Created Yet
+              </h3>
+            </span>
+          </div>
+        </>
+      )}
+    </ul>
+  );
+}
+
+export function DashboardLinkList({
+  links,
+  displayDelete = false,
+}: {
+  links: any;
+  displayDelete?: boolean;
+}) {
+  return (
+    <ul className='space-y-4'>
+      {Boolean(links.length) &&
+        links.map((link: any) => (
+          <li key={link.id} className='relative'>
+            <ClientUserLink href={link.href} icon={link?.icon} name={link.name} />
             {displayDelete && (
               <>
                 <LinkDelete linkId={link.id} />

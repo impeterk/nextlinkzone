@@ -4,6 +4,10 @@ import SigninLink from '@/app/(app)/signin/SigninLink';
 import { auth } from '@/auth';
 import UserDropDown from '@/app/(app)/_components/user-dropdown';
 
+import { UserPages } from '../dashboard/page/page-components';
+import { MobileSideBar, NewPage } from '../dashboard/page/client-components';
+import GetStartedButton from '@/app/(app)/_components/get-started-btn';
+
 export default async function Header() {
   const session = await auth();
   const user = session?.user;
@@ -13,7 +17,11 @@ export default async function Header() {
         <Logo href={user ? '/dashboard/pages' : '/'} />
 
         <div className='flex items-center gap-6'>
-          <div className='flex items-center'>
+          <div className='hidden lg:block'>
+            <ThemeToggle />
+          </div>
+
+          <div className='hidden items-center lg:flex'>
             {!user && (
               <>
                 <SigninLink />
@@ -25,7 +33,31 @@ export default async function Header() {
               </>
             )}
           </div>
-          <ThemeToggle />
+          <div className='lg:hidden'>
+            <MobileSideBar>
+              <div className='item-center flex h-full flex-col py-12'>
+                {user ? (
+                  <>
+                    <NewPage />
+                    <div className='pt-16'>
+                      <UserPages />
+                    </div>
+                    <div className='mt-auto flex items-center justify-evenly'>
+                      <ThemeToggle />
+                      <UserDropDown user={user} />
+                    </div>
+                  </>
+                ): (
+                  <>
+                  <div className="mt-auto w-full">
+
+                  <GetStartedButton />
+                  </div>
+                  </>
+                )}
+              </div>
+            </MobileSideBar>
+          </div>
         </div>
       </div>
     </header>

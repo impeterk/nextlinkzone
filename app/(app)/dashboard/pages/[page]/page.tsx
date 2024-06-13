@@ -3,6 +3,7 @@ import {
   LinkList,
   PageHeader,
   UserImage,
+  DashboardLinkList
 } from '@/components/dashboard/page/page-components';
 import {
   PageOptions,
@@ -39,14 +40,14 @@ export default async function DashboardPage({
         <PageOptions />
         {/* <ChangeHeaderColor /> */}
       </div>
-      <main className='mt-40'>
+      <main className='mt-32 md:mt-40'>
         <PageMain
           currentBgColor={pageData?.bgColor ?? 'hsl(var(--card))'}
           currentColor={pageData?.color ?? 'hsl(var(--card-foreground))'}
           key={params.page}
         >
           <>
-            <LinkList links={pageData?.links} displayDelete={true} />
+            <DashboardLinkList links={pageData?.links} displayDelete={true} />
             <div className='my-4'>
               <DropdownMenuSeparator />
             </div>

@@ -42,18 +42,18 @@ export default function UserDropDown({ user }: { user: User }) {
           <span>{user.name}</span>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align='end'>
+      <DropdownMenuContent align='end' className="w-full">
         {links.map((link) => {
           const LinkIcon = link.icon;
           return (
             <Link key={link.name} href={link.href}>
-              <DropdownMenuItem
-                key={link.name}
-                className={clsx('flex items-center gap-2', {
+              <DropdownMenuItem 
+                className={clsx('flex items-center gap-2 px-6 py-4', {
                   'text-emerald-500 underline hover:text-emerald-500 dark:text-emerald-400 hover:dark:text-emerald-400':
                     pathname.includes(link.href),
                 })}
               >
+
                 <LinkIcon className='size-5' />
                 <span>{link.name}</span>
               </DropdownMenuItem>
@@ -62,7 +62,7 @@ export default function UserDropDown({ user }: { user: User }) {
         })}
         <DropdownMenuSeparator />
         <DropdownMenuItem
-          className='flex items-center gap-2 border border-destructive'
+          className='flex items-center gap-2 bg-rose-400/60 py-2 px-6'
           onClick={handleSignOut}
         >
           <LuLogOut className='size-5' />
