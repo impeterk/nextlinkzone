@@ -18,7 +18,7 @@ type Mail = {
 export async function mailer(mail: Mail) {
   const info = await transporter.sendMail({
     from: `${mail.name} <${mail.email}>`,
-    to: 'peterkudelas@skiff.com',
+    to: 'contact@peterk.dev',
     subject: 'Contacted from website',
     html: `${mail.message}`,
   });
