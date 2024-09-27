@@ -1,6 +1,5 @@
 import { ImageResponse } from 'next/og';
-export const runtime = 'edge';
-import icon from './icon.png';
+// export const runtime = 'edge';
 // Image metadata
 export const alt = 'My Link Zone';
 export const size = {
@@ -9,9 +8,9 @@ export const size = {
 };
 
 export const contentType = 'image/png';
-
+const icon = `${process.env.NODE_ENV === 'development' ? process.env.DEV_URL : process.env.PRODUCTION_URL}/logo.webp`;
 // Image generation
-export default async function Image() {
+export default async function OgImage() {
   return new ImageResponse(
     (
       <div
@@ -35,7 +34,7 @@ export default async function Image() {
             alignItems: 'center',
           }}
         >
-          <img src={icon.src} width='42' height='42' />
+          <img src={icon} width='42' height='42' />
           <span
             style={{
               marginLeft: 8,
@@ -84,4 +83,57 @@ export default async function Image() {
       ...size,
     }
   );
+}
+{
+  /* >
+        <div
+          style={{
+            left: 42,
+            top: 42,
+            position: 'absolute',
+            display: 'flex',
+            alignItems: 'center',
+          }}
+        >
+          <img src='' width='42' height='42' />
+          <span
+            style={{
+              marginLeft: 8,
+              fontSize: 20,
+            }}
+          >
+            mylinkz.one
+          </span>
+        </div>
+        <div
+          style={{
+            display: 'flex',
+            flexWrap: 'wrap',
+            justifyContent: 'center',
+            padding: '20px 50px',
+            margin: '0 42px',
+            fontSize: 40,
+            width: 'auto',
+            maxWidth: 550,
+            textAlign: 'center',
+            backgroundColor: 'rgb(39, 39, 42)',
+            color: '#6366f1',
+            lineHeight: 1.4,
+            borderRadius: '0.75rem',
+          }}
+        >
+          <div
+            style={{
+              backgroundImage:
+                'linear-gradient(90deg, #10b981, rgb(0, 223, 216))',
+              backgroundClip: 'text',
+              // @ts-ignore
+              '-webkit-background-clip': 'text',
+              color: 'transparent',
+            }}
+          >
+            Your ONE link to share with the world
+          </div>
+        </div>
+       */
 }
