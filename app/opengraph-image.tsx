@@ -14,7 +14,7 @@ export const contentType = 'image/png';
 export default async function Image() {
   // Font
   const Geist = fetch(
-    new URL('./_next/static/media/e11418ac562b8ac1-s.p.woff2', import.meta.url)
+    new URL('/_next/static/media/e11418ac562b8ac1-s.p.woff2', import.meta.url)
   ).then((res) => res.arrayBuffer());
 
   return new ImageResponse(
@@ -82,7 +82,6 @@ export default async function Image() {
         </div>
       </div>
     ),
-
     // ImageResponse options
     {
       // For convenience, we can re-use the exported opengraph-image
