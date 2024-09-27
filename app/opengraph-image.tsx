@@ -2,7 +2,7 @@ import { ImageResponse } from 'next/og';
 export const runtime = 'edge';
 import icon from './icon.png';
 // Image metadata
-export const alt = 'About Acme';
+export const alt = 'My Link Zone';
 export const size = {
   width: 1200,
   height: 630,
@@ -12,11 +12,6 @@ export const contentType = 'image/png';
 
 // Image generation
 export default async function Image() {
-  // Font
-  const Geist = fetch(
-    new URL('/_next/static/media/e11418ac562b8ac1-s.p.woff2', import.meta.url)
-  ).then((res) => res.arrayBuffer());
-
   return new ImageResponse(
     (
       <div
@@ -87,14 +82,6 @@ export default async function Image() {
       // For convenience, we can re-use the exported opengraph-image
       // size config to also set the ImageResponse's width and height.
       ...size,
-      fonts: [
-        {
-          name: 'Geist',
-          data: await Geist,
-          style: 'normal',
-          weight: 400,
-        },
-      ],
     }
   );
 }
